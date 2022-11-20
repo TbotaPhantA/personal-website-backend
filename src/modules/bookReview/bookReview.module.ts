@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { LanguageCreateService } from './application/aggregates/services/languageCreate.service';
 
-@Module({})
+@Module({
+  providers: [LanguageCreateService],
+})
 export class BookReviewModule {}
