@@ -3,6 +3,7 @@ import { LanguageController } from './language.controller';
 import { CreateLanguageService } from './services/createLanguage.service';
 import { LANGUAGE_REPOSITORY } from './shared/tokens';
 import { InMemoryLanguageRepository } from './repositories/inMemoryLanguage.repository';
+import { GetLanguageService } from './services/getLanguage.service';
 
 @Module({
   controllers: [LanguageController],
@@ -11,6 +12,7 @@ import { InMemoryLanguageRepository } from './repositories/inMemoryLanguage.repo
       provide: LANGUAGE_REPOSITORY,
       useClass: InMemoryLanguageRepository,
     },
+    GetLanguageService,
     CreateLanguageService,
   ],
 })
