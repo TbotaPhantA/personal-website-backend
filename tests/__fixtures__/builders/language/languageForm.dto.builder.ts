@@ -3,6 +3,9 @@ import { LanguageFromDto } from '../../../../src/domain/language/shared/dto/lang
 
 export class LanguageFormDtoBuilder {
   public static get defaultOnlyRequired(): InjectionBuilder<LanguageFromDto> {
-    return new InjectionBuilder<LanguageFromDto>(new LanguageFromDto());
+    return new InjectionBuilder<LanguageFromDto>(new LanguageFromDto()).with({
+      id: 'ru',
+      name: 'Русский',
+    });
   }
 }
