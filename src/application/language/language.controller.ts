@@ -14,7 +14,7 @@ export class LanguageController {
     private readonly createLanguageService: CreateLanguageService,
   ) {}
 
-  @Get('all-languages')
+  @Get('all')
   @ApiOperation({ summary: 'get all languages' })
   @ApiResponse({
     status: HttpStatus.OK,
