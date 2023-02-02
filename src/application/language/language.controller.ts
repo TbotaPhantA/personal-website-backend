@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LanguageFormDto } from '../../domain/language/shared/dto/languageForm.dto';
 import { CreateLanguageService } from './services/createLanguage.service';
 import { LanguageOutputDto } from '../../domain/language/shared/dto/languageOutput.dto';
-import { GetAllLanguagesOutputDto } from './dto/getAllLanguagesOutput.dto';
+import { AllLanguagesOutputDto } from '../../domain/language/shared/dto/allLanguagesOutput.dto';
 import { GetLanguageService } from './services/getLanguage.service';
 
 @Controller('language')
@@ -19,9 +19,9 @@ export class LanguageController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'all languages were received',
-    type: GetAllLanguagesOutputDto,
+    type: AllLanguagesOutputDto,
   })
-  async getAllLanguages(): Promise<GetAllLanguagesOutputDto> {
+  async getAllLanguages(): Promise<AllLanguagesOutputDto> {
     return this.getLanguageService.getAll();
   }
 
