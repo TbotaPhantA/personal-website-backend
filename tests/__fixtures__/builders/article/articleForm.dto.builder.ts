@@ -1,4 +1,4 @@
-import { ArticleFormDto } from '../../../src/domain/article/shared/dto/articleFormData.dto';
+import { ArticleFormDto } from '../../../../src/domain/article/shared/dto/articleFormData.dto';
 import { InjectionBuilder } from 'ts-fixture-builder';
 import { ArticleTranslationFormDtoBuilder } from './articleTranslationForm.dto';
 
