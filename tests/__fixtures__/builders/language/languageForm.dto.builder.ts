@@ -1,9 +1,9 @@
 import { InjectionBuilder } from 'ts-fixture-builder';
-import { LanguageFromDto } from '../../../../src/domain/language/shared/dto/languageFrom.dto';
+import { LanguageFormDto } from '../../../../src/domain/language/shared/dto/languageForm.dto';
 
 export class LanguageFormDtoBuilder {
-  public static get defaultOnlyRequired(): InjectionBuilder<LanguageFromDto> {
-    return new InjectionBuilder<LanguageFromDto>(new LanguageFromDto()).with({
+  public static get defaultOnlyRequired(): InjectionBuilder<LanguageFormDto> {
+    return new InjectionBuilder<LanguageFormDto>(new LanguageFormDto()).with({
       id: 'ru',
       name: 'Русский',
     });

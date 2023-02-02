@@ -1,10 +1,10 @@
-import { LanguageFromDto } from './shared/dto/languageFrom.dto';
+import { LanguageFormDto } from './shared/dto/languageForm.dto';
 
 export class Language {
-  private readonly id: string;
-  private readonly name: string;
+  readonly id: string;
+  readonly name: string;
 
-  constructor(dto: LanguageFromDto) {
+  constructor(dto: LanguageFormDto) {
     this.id = dto.id;
     this.name = dto.name;
   }

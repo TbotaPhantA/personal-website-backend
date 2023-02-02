@@ -5,11 +5,17 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import * as util from 'util';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const port = 3000;
 
   const app = await createApp();
+
+  const config = new DocumentBuilder().setTitle('Portfolio').build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document);
+
   await app.listen(port, (err, address) => printStartResult(err, address));
 }
 
