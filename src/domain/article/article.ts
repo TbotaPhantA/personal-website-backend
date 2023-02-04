@@ -3,11 +3,11 @@ import { v4 as uuid } from 'uuid';
 import { ArticleTranslation } from './articleTranslation/articleTranslation';
 
 export class Article {
-  private readonly id: string;
-  private readonly originalLanguageId: string;
-  private readonly originalTitle: string;
-  private readonly originalContent: string;
-  private readonly translations: ArticleTranslation[];
+  readonly id: string;
+  readonly originalLanguageId: string;
+  readonly originalTitle: string;
+  readonly originalContent: string;
+  readonly translations: ArticleTranslation[];
 
   constructor(dto: ArticleFormDto) {
     this.id = uuid();

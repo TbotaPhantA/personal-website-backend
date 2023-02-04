@@ -2,11 +2,11 @@ import { ArticleTranslationFormDto } from '../shared/dto/articleTranslationForm.
 import { v4 as uuid } from 'uuid';
 
 export class ArticleTranslation {
-  private readonly id: string;
-  private readonly articleId: string;
-  private readonly languageId: string;
-  private readonly title: string;
-  private readonly content: string;
+  readonly id: string;
+  readonly articleId: string;
+  readonly languageId: string;
+  readonly title: string;
+  readonly content: string;
 
   constructor(dto: ArticleTranslationFormDto) {
     this.id = uuid();

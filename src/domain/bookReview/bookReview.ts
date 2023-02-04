@@ -3,8 +3,8 @@ import { v4 as uuid } from 'uuid';
 import { Article } from '../article/article';
 
 export class BookReview {
-  private readonly id: string;
-  private readonly article: Article;
+  readonly id: string;
+  readonly article: Article;
 
   constructor(dto: BookReviewFormDto) {
     this.id = uuid();
