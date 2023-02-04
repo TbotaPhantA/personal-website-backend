@@ -4,7 +4,7 @@ import { LanguageRepository } from '../repositories/language.repository';
 import { AllLanguagesOutputDto } from '../../../domain/language/shared/dto/allLanguagesOutput.dto';
 
 @Injectable()
-export class GetLanguageService {
+export class ReadLanguageService {
   constructor(
     @Inject(LANGUAGE_REPOSITORY)
     private readonly languageRepository: LanguageRepository,

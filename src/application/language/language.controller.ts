@@ -4,14 +4,14 @@ import { LanguageFormDto } from '../../domain/language/shared/dto/languageForm.d
 import { CreateLanguageService } from './services/createLanguage.service';
 import { LanguageOutputDto } from '../../domain/language/shared/dto/languageOutput.dto';
 import { AllLanguagesOutputDto } from '../../domain/language/shared/dto/allLanguagesOutput.dto';
-import { GetLanguageService } from './services/getLanguage.service';
+import { ReadLanguageService } from './services/readLanguage.service';
 
 @Controller('language')
 @ApiTags('language')
 export class LanguageController {
   constructor(
-    private readonly getLanguageService: GetLanguageService,
-    private readonly createLanguageService: CreateLanguageService,
+    private readonly readService: ReadLanguageService,
+    private readonly createService: CreateLanguageService,
   ) {}
 
   @Get('all')
@@ -22,7 +22,7 @@ export class LanguageController {
     type: AllLanguagesOutputDto,
   })
   async getAllLanguages(): Promise<AllLanguagesOutputDto> {
-    return this.getLanguageService.getAll();
+    return this.readService.getAll();
   }
 
   @Post()
@@ -35,6 +35,6 @@ export class LanguageController {
   async createLanguage(
     @Body() dto: LanguageFormDto,
   ): Promise<LanguageOutputDto> {
-    return this.createLanguageService.createLanguage(dto);
+    return this.createService.createLanguage(dto);
   }
 }
