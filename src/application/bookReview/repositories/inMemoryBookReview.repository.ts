@@ -1,4 +1,4 @@
-import { BookReviewRepository } from './BookReviewRepository';
+import { BookReviewRepository } from './bookReviewRepository';
 import { BookReview } from '../../../domain/bookReview/bookReview';
 
 export class InMemoryBookReviewRepository implements BookReviewRepository {
@@ -6,6 +6,10 @@ export class InMemoryBookReviewRepository implements BookReviewRepository {
     string,
     BookReview
   >();
+
+  public async getAll(): Promise<BookReview[]> {
+    return Array.from(this.bookReviewsMap.values());
+  }
 
   public async save(bookReview: BookReview): Promise<BookReview> {
     this.bookReviewsMap.set(bookReview.id, bookReview);

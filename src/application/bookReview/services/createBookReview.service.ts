@@ -3,7 +3,7 @@ import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/bookRev
 import { BookReviewOutputDto } from '../../../domain/bookReview/shared/dto/bookReviewOutput.dto';
 import { BookReview } from '../../../domain/bookReview/bookReview';
 import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
-import { BookReviewRepository } from '../repositories/BookReviewRepository';
+import { BookReviewRepository } from '../repositories/bookReviewRepository';
 
 @Injectable()
 export class CreateBookReviewService {
