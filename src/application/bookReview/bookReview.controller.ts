@@ -1,13 +1,21 @@
-import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BookReviewOutputDto } from '../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
 import { CreateBookReviewService } from './services/createBookReview.service';
 import { BookReviewFormDto } from '../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { ReadBookReviewService } from './services/readBookReview.service';
-// eslint-disable-next-line max-len
 import { AllBookReviewsOutputDto } from '../../domain/bookReview/shared/dto/output/allBookReviewsOutput.dto';
+import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
 
 @Controller('book-review')
+@UseFilters(AllExceptionFilter)
 @ApiTags('book-review')
 export class BookReviewController {
   constructor(
