@@ -4,6 +4,7 @@ import { CreateBookReviewService } from './services/createBookReview.service';
 import { BOOK_REVIEW_REPOSITORY } from './shared/tokens';
 import { InMemoryBookReviewRepository } from './repositories/inMemoryBookReview.repository';
 import { ReadBookReviewService } from './services/readBookReview.service';
+import { BookReviewFactory } from './factories/bookReview.factory';
 
 @Module({
   controllers: [BookReviewController],
@@ -14,6 +15,7 @@ import { ReadBookReviewService } from './services/readBookReview.service';
     },
     ReadBookReviewService,
     CreateBookReviewService,
+    BookReviewFactory,
   ],
 })
 export class BookReviewModule {}
