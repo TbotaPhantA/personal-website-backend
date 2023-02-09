@@ -15,6 +15,7 @@ export class CreateBookReviewService {
   public async createBookReview(
     dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
+    // TODO: display validation error to frontend properly.
     const review = new BookReview(dto);
     await this.repository.save(review);
     return BookReviewOutputDto.from(review);

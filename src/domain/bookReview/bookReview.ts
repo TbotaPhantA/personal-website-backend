@@ -9,6 +9,7 @@ export class BookReview {
   readonly article: Article;
 
   constructor(props: BookReviewFormDto) {
+    // TODO: add safety validation and create test for it.
     this.id = uuid();
     this.article = new Article(props.article);
   }
