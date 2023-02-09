@@ -3,7 +3,8 @@ import { BookReviewFormDtoBuilder } from '../../../__fixtures__/builders/bookRev
 import { BookReview } from '../../../../src/domain/bookReview/bookReview';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
-import { success } from '@derbent-ninjas/invariant-composer';
+import { success, fail } from '@derbent-ninjas/invariant-composer';
+import { LANGUAGES_MUST_NOT_BE_REPEATED } from '../../../../src/shared/errorMessages';
 
 describe('Create BookReview', () => {
   describe('constructor', () => {
@@ -15,7 +16,7 @@ describe('Create BookReview', () => {
   });
 
   describe('canCreate', () => {
-    describe('languages must be not repeated', () => {
+    describe('languages must not be repeated', () => {
       const testCases = [
         {
           toString: () => '1',
@@ -34,6 +35,24 @@ describe('Create BookReview', () => {
             }).result,
           }).result,
           expectedInvariant: success(),
+        },
+        {
+          toString: () => '2',
+          dto: BookReviewFormDtoBuilder.defaultWithTranslation.with({
+            article: ArticleFormDtoBuilder.defaultWithTranslation.with({
+              originalLanguageId: 'en',
+              originalTitle: 'Domain-Driven Design',
+              originalContent: 'Aggregates are cool!',
+              translations: [
+                ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
+                  languageId: 'en',
+                  title: 'Domain-Driven Design',
+                  content: 'Aggregates are cool!',
+                }).result,
+              ],
+            }).result,
+          }).result,
+          expectedInvariant: fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
         },
       ];
 

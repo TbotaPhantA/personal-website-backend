@@ -1,2 +1,3 @@
 export const MUST_NOT_CONTAIN_SPECIAL_CHARACTERS =
   'Must not contain special characters.';
+export const LANGUAGES_MUST_NOT_BE_REPEATED = 'Languages must not be repeated.';
