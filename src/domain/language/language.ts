@@ -1,4 +1,4 @@
-import { LanguageFormDto } from './shared/dto/languageForm.dto';
+import { LanguageFormDto } from './shared/dto/form/languageForm.dto';
 
 export class Language {
   readonly id: string;

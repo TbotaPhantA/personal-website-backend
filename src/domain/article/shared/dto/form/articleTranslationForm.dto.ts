@@ -6,10 +6,10 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { ALPHANUMERIC_REGEX } from '../../../../shared/constants/noSpecialSymbolsRegEx';
-import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../shared/errorMessages';
+import { ALPHANUMERIC_REGEX } from '../../../../../shared/constants/noSpecialSymbolsRegEx';
+import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../../shared/errorMessages';
 
-export class LanguageFormDto {
+export class ArticleTranslationFormDto {
   @IsNotEmpty()
   @IsString()
   @Length(2, 2)
@@ -17,7 +17,7 @@ export class LanguageFormDto {
     message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'en' })
-  id: string;
+  languageId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -25,6 +25,11 @@ export class LanguageFormDto {
   @Matches(ALPHANUMERIC_REGEX, {
     message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
-  @ApiProperty({ example: 'English' })
-  name: string;
+  @ApiProperty({ example: 'Title' })
+  title: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ example: 'Content' })
+  content: string;
 }

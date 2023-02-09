@@ -1,5 +1,5 @@
 import { InjectionBuilder } from 'ts-fixture-builder';
-import { BookReviewFormDto } from '../../../../src/domain/bookReview/shared/dto/bookReviewForm.dto';
+import { BookReviewFormDto } from '../../../../src/domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { ArticleFormDtoBuilder } from '../article/articleForm.dto.builder';
 
 export class BookReviewFormDtoBuilder {

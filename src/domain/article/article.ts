@@ -1,4 +1,4 @@
-import { ArticleFormDto } from './shared/dto/articleFormData.dto';
+import { ArticleFormDto } from './shared/dto/form/articleFormData.dto';
 import { v4 as uuid } from 'uuid';
 import { ArticleTranslation } from './articleTranslation/articleTranslation';
 
@@ -15,7 +15,8 @@ export class Article {
     this.originalTitle = dto.originalTitle;
     this.originalContent = dto.originalContent;
     this.translations = dto.translations.map(
-      (translation) => new ArticleTranslation(translation),
+      (translation) =>
+        new ArticleTranslation({ ...translation, articleId: this.id }),
     );
   }
 }

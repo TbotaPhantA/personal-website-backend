@@ -1,5 +1,5 @@
 import { ArticleTranslationOutputDto } from './articleTranslationOutput.dto';
-import { Article } from '../../article';
+import { Article } from '../../../article';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ArticleOutputDto {

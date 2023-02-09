@@ -1,5 +1,5 @@
 import { BookReviewOutputDto } from './bookReviewOutput.dto';
-import { BookReview } from '../../bookReview';
+import { BookReview } from '../../../bookReview';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AllBookReviewsOutputDto {

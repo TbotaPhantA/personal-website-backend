@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { LanguageFormDto } from '../../domain/language/shared/dto/languageForm.dto';
+import { LanguageFormDto } from '../../domain/language/shared/dto/form/languageForm.dto';
 import { CreateLanguageService } from './services/createLanguage.service';
-import { LanguageOutputDto } from '../../domain/language/shared/dto/languageOutput.dto';
-import { AllLanguagesOutputDto } from '../../domain/language/shared/dto/allLanguagesOutput.dto';
+import { LanguageOutputDto } from '../../domain/language/shared/dto/output/languageOutput.dto';
+import { AllLanguagesOutputDto } from '../../domain/language/shared/dto/output/allLanguagesOutput.dto';
 import { ReadLanguageService } from './services/readLanguage.service';
 
 @Controller('language')

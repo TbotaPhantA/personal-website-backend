@@ -1,4 +1,4 @@
-import { ArticleTranslation } from '../../articleTranslation/articleTranslation';
+import { ArticleTranslation } from '../../../articleTranslation/articleTranslation';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ArticleTranslationOutputDto {

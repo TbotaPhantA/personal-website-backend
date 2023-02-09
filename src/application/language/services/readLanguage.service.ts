@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LANGUAGE_REPOSITORY } from '../shared/tokens';
 import { LanguageRepository } from '../repositories/language.repository';
-import { AllLanguagesOutputDto } from '../../../domain/language/shared/dto/allLanguagesOutput.dto';
+import { AllLanguagesOutputDto } from '../../../domain/language/shared/dto/output/allLanguagesOutput.dto';
 
 @Injectable()
 export class ReadLanguageService {

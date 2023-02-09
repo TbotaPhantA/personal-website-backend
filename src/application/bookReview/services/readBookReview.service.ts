@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 // eslint-disable-next-line max-len
-import { AllBookReviewsOutputDto } from '../../../domain/bookReview/shared/dto/allBookReviewsOutput.dto';
+import { AllBookReviewsOutputDto } from '../../../domain/bookReview/shared/dto/output/allBookReviewsOutput.dto';
 import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
 import { BookReviewRepository } from '../repositories/bookReviewRepository';
 

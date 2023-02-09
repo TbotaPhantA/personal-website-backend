@@ -1,6 +1,6 @@
 import { LanguageOutputDto } from './languageOutput.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { Language } from '../../language';
+import { Language } from '../../../language';
 
 export class AllLanguagesOutputDto {
   @ApiProperty({ type: [LanguageOutputDto] })

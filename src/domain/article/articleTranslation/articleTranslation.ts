@@ -1,5 +1,9 @@
-import { ArticleTranslationFormDto } from '../shared/dto/articleTranslationForm.dto';
+import { ArticleTranslationFormDto } from '../shared/dto/form/articleTranslationForm.dto';
 import { v4 as uuid } from 'uuid';
+
+type CreationProps = ArticleTranslationFormDto & {
+  articleId: string;
+};
 
 export class ArticleTranslation {
   readonly id: string;
@@ -8,11 +12,11 @@ export class ArticleTranslation {
   readonly title: string;
   readonly content: string;
 
-  constructor(dto: ArticleTranslationFormDto) {
+  constructor(props: CreationProps) {
     this.id = uuid();
-    this.articleId = dto.articleId;
-    this.languageId = dto.languageId;
-    this.title = dto.title;
-    this.content = dto.content;
+    this.articleId = props.articleId;
+    this.languageId = props.languageId;
+    this.title = props.title;
+    this.content = props.content;
   }
 }

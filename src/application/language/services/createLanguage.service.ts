@@ -1,5 +1,5 @@
-import { LanguageOutputDto } from '../../../domain/language/shared/dto/languageOutput.dto';
-import { LanguageFormDto } from '../../../domain/language/shared/dto/languageForm.dto';
+import { LanguageOutputDto } from '../../../domain/language/shared/dto/output/languageOutput.dto';
+import { LanguageFormDto } from '../../../domain/language/shared/dto/form/languageForm.dto';
 import { Language } from '../../../domain/language/language';
 import { LanguageRepository } from '../repositories/language.repository';
 import { Inject, Injectable } from '@nestjs/common';

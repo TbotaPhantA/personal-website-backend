@@ -1,3 +1,4 @@
+import { ArticleTranslationFormDto } from './articleTranslationForm.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
@@ -5,19 +6,12 @@ import {
   Length,
   Matches,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
-import { ALPHANUMERIC_REGEX } from '../../../../shared/constants/noSpecialSymbolsRegEx';
-import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../shared/errorMessages';
+import { ALPHANUMERIC_REGEX } from '../../../../../shared/constants/noSpecialSymbolsRegEx';
+import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../../shared/errorMessages';
 
-export class ArticleTranslationFormDto {
-  @IsNotEmpty()
-  @IsString()
-  @Matches(ALPHANUMERIC_REGEX, {
-    message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
-  })
-  @ApiProperty({ example: 'uuid' })
-  articleId: string;
-
+export class ArticleFormDto {
   @IsNotEmpty()
   @IsString()
   @Length(2, 2)
@@ -25,7 +19,7 @@ export class ArticleTranslationFormDto {
     message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'en' })
-  languageId: string;
+  originalLanguageId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -34,10 +28,15 @@ export class ArticleTranslationFormDto {
     message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'Title' })
-  title: string;
+  originalTitle: string;
 
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ example: 'Content' })
-  content: string;
+  originalContent: string;
+
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @ApiProperty({ type: [ArticleTranslationFormDto] })
+  translations: ArticleTranslationFormDto[];
 }
