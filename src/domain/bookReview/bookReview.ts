@@ -1,7 +1,7 @@
 import { BookReviewFormDto } from './shared/dto/form/bookReviewForm.dto';
 import { v4 as uuid } from 'uuid';
 import { Article } from '../article/article';
-import { Invariant } from '@derbent-ninjas/invariant-composer';
+import { assert, Invariant } from '@derbent-ninjas/invariant-composer';
 import { languagesMustNotBeRepeated } from './shared/utils/invariants/languagesMustNotBeRepeated';
 
 export class BookReview {
@@ -9,7 +9,7 @@ export class BookReview {
   readonly article: Article;
 
   constructor(props: BookReviewFormDto) {
-    // TODO: add safety validation and create test for it.
+    assert('BookReview', BookReview.canCreate(props));
     this.id = uuid();
     this.article = new Article(props.article);
   }

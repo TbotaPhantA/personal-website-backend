@@ -13,6 +13,25 @@ describe('Create BookReview', () => {
       const bookReview = new BookReview(dto);
       expect(bookReview).toBeDefined();
     });
+
+    test('when incorrect dto - should throw an exception', () => {
+      const invalidData = BookReviewFormDtoBuilder.defaultWithTranslation.with({
+        article: ArticleFormDtoBuilder.defaultWithTranslation.with({
+          originalLanguageId: 'en',
+          originalTitle: 'Domain-Driven Design',
+          originalContent: 'Aggregates are cool!',
+          translations: [
+            ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
+              languageId: 'en',
+              title: 'Domain-Driven Design',
+              content: 'Aggregates are cool!',
+            }).result,
+          ],
+        }).result,
+      }).result;
+
+      expect(() => new BookReview(invalidData)).toThrow();
+    });
   });
 
   describe('canCreate', () => {
