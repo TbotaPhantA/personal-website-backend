@@ -20,4 +20,6 @@ export class BookReview {
     const [props] = params;
     return languagesMustNotBeRepeated(props);
   }
+
+  // TODO: represent as RawBookReview to make fields private.
 }
