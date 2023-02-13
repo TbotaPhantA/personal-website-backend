@@ -10,6 +10,7 @@ export class Article {
   readonly translations: ArticleTranslation[];
 
   constructor(dto: ArticleFormDto) {
+    // TODO: move validation from bookReview to here.
     this.id = uuid();
     this.originalLanguageId = dto.originalLanguageId;
     this.originalTitle = dto.originalTitle;
