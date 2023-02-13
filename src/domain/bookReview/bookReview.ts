@@ -31,6 +31,4 @@ export class BookReview {
       allLanguageIdsMustExist(validation),
     );
   }
-
-  // TODO: represent as RawBookReview to make fields private.
 }
