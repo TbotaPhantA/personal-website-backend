@@ -5,8 +5,10 @@ import { BOOK_REVIEW_REPOSITORY } from './shared/tokens';
 import { InMemoryBookReviewRepository } from './repositories/inMemoryBookReview.repository';
 import { ReadBookReviewService } from './services/readBookReview.service';
 import { BookReviewFactory } from './factories/bookReview.factory';
+import { LanguageModule } from '../language/language.module';
 
 @Module({
+  imports: [LanguageModule],
   controllers: [BookReviewController],
   providers: [
     {

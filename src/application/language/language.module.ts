@@ -15,5 +15,6 @@ import { ReadLanguageService } from './services/readLanguage.service';
     ReadLanguageService,
     CreateLanguageService,
   ],
+  exports: [ReadLanguageService],
 })
 export class LanguageModule {}

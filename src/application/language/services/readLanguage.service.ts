@@ -14,4 +14,8 @@ export class ReadLanguageService {
     const languages = await this.languageRepository.findAll();
     return AllLanguagesOutputDto.from(languages);
   }
+
+  public async doLanguagesExist(languages: string[]): Promise<boolean> {
+    return this.languageRepository.doLanguagesExist(languages);
+  }
 }

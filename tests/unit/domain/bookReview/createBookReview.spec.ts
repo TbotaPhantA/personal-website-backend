@@ -4,13 +4,17 @@ import { BookReview } from '../../../../src/domain/bookReview/bookReview';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
 import { success, fail } from '@derbent-ninjas/invariant-composer';
-import { LANGUAGES_MUST_NOT_BE_REPEATED } from '../../../../src/shared/errorMessages';
+import {
+  LANGUAGE_DOESNT_EXIST,
+  LANGUAGES_MUST_NOT_BE_REPEATED,
+} from '../../../../src/shared/errorMessages';
 
 describe('Create BookReview', () => {
   describe('constructor', () => {
     test('when proper dto passed - should be defined', () => {
       const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
-      const bookReview = new BookReview(dto);
+      const validation = { doLanguagesExist: true };
+      const bookReview = new BookReview(dto, validation);
       expect(bookReview).toBeDefined();
     });
 
@@ -30,7 +34,9 @@ describe('Create BookReview', () => {
         }).result,
       }).result;
 
-      expect(() => new BookReview(invalidData)).toThrow();
+      const validation = { doLanguagesExist: true };
+
+      expect(() => new BookReview(invalidData, validation)).toThrow();
     });
   });
 
@@ -53,6 +59,9 @@ describe('Create BookReview', () => {
               ],
             }).result,
           }).result,
+          validation: {
+            doLanguagesExist: true,
+          },
           expectedInvariant: success(),
         },
         {
@@ -71,12 +80,47 @@ describe('Create BookReview', () => {
               ],
             }).result,
           }).result,
+          validation: {
+            doLanguagesExist: true,
+          },
           expectedInvariant: fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
         },
       ];
 
-      test.each(testCases)('%s', ({ dto, expectedInvariant }) => {
-        const canCreate = BookReview.canCreate(dto);
+      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
+        const canCreate = BookReview.canCreate(dto, validation);
+        expect(canCreate).toStrictEqual(expectedInvariant);
+      });
+    });
+
+    describe('languagesId must exist', () => {
+      const testCases = [
+        {
+          toString: () => '1',
+          dto: BookReviewFormDtoBuilder.defaultWithTranslation.with({
+            article: ArticleFormDtoBuilder.defaultWithTranslation.with({
+              originalLanguageId: 'en',
+              originalTitle: 'Domain-Driven Design',
+              originalContent: 'Aggregates are cool!',
+              translations: [
+                ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
+                  languageId: 'ru',
+                  title: 'Предметно-Ориентированое Проектирование',
+                  content: 'Аггрераты крутые!',
+                }).result,
+              ],
+            }).result,
+          }).result,
+          validation: {
+            doLanguagesExist: false,
+          },
+          expectedInvariant: fail({ message: LANGUAGE_DOESNT_EXIST }),
+        },
+      ];
+
+      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
+        const canCreate = BookReview.canCreate(dto, validation);
+
         expect(canCreate).toStrictEqual(expectedInvariant);
       });
     });

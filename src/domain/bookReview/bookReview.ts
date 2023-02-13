@@ -1,15 +1,23 @@
 import { BookReviewFormDto } from './shared/dto/form/bookReviewForm.dto';
 import { v4 as uuid } from 'uuid';
 import { Article } from '../article/article';
-import { assert, Invariant } from '@derbent-ninjas/invariant-composer';
+import { assert, compose, Invariant } from '@derbent-ninjas/invariant-composer';
 import { languagesMustNotBeRepeated } from './shared/utils/invariants/languagesMustNotBeRepeated';
+import { allLanguageIdsMustExist } from './shared/utils/invariants/allLanguageIdsMustExist';
+
+export interface ExtraBookReviewValidationProps {
+  doLanguagesExist: boolean;
+}
 
 export class BookReview {
   readonly id: string;
   readonly article: Article;
 
-  constructor(props: BookReviewFormDto) {
-    assert('BookReview', BookReview.canCreate(props));
+  constructor(
+    props: BookReviewFormDto,
+    validation: ExtraBookReviewValidationProps,
+  ) {
+    assert('BookReview', BookReview.canCreate(props, validation));
     this.id = uuid();
     this.article = new Article(props.article);
   }
@@ -17,8 +25,11 @@ export class BookReview {
   public static canCreate(
     ...params: ConstructorParameters<typeof BookReview>
   ): Invariant {
-    const [props] = params;
-    return languagesMustNotBeRepeated(props);
+    const [props, validation] = params;
+    return compose(
+      languagesMustNotBeRepeated(props),
+      allLanguageIdsMustExist(validation),
+    );
   }
 
   // TODO: represent as RawBookReview to make fields private.
