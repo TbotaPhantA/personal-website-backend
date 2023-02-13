@@ -5,7 +5,7 @@ import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/ar
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
 import { success, fail } from '@derbent-ninjas/invariant-composer';
 import {
-  LANGUAGE_DOESNT_EXIST,
+  LANGUAGES_DONT_EXIST,
   LANGUAGES_MUST_NOT_BE_REPEATED,
 } from '../../../../src/shared/errorMessages';
 
@@ -114,7 +114,7 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedInvariant: fail({ message: LANGUAGE_DOESNT_EXIST }),
+          expectedInvariant: fail({ message: LANGUAGES_DONT_EXIST }),
         },
       ];
 
