@@ -13,7 +13,8 @@ export class CreateLanguageService {
   ) {}
 
   async createLanguage(dto: LanguageFormDto): Promise<LanguageOutputDto> {
-    const language = new Language(dto);
+    const isIdUnique = await this.languageRepository.doesLanguageExist(dto.id);
+    const language = new Language(dto, { isIdUnique });
     await this.languageRepository.save(language);
     return LanguageOutputDto.from(language);
   }

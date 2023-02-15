@@ -17,7 +17,7 @@ export class BookReview {
     props: BookReviewFormDto,
     validation: ExtraBookReviewValidationProps,
   ) {
-    assert('BookReview', BookReview.canCreate(props, validation));
+    assert(BookReview.name, BookReview.canCreate(props, validation));
     this.id = uuid();
     this.article = new Article(props.article);
   }

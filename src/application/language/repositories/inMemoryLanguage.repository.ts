@@ -18,4 +18,8 @@ export class InMemoryLanguageRepository implements LanguageRepository {
   async doLanguagesExist(languages: string[]): Promise<boolean> {
     return languages.every((l) => this.languagesMap.has(l));
   }
+
+  async doesLanguageExist(languageId: string): Promise<boolean> {
+    return this.languagesMap.has(languageId);
+  }
 }
