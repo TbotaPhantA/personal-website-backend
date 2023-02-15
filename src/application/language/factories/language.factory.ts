@@ -2,7 +2,9 @@ import { LanguageFormDto } from '../../../domain/language/shared/dto/form/langua
 import { Language } from '../../../domain/language/language';
 import { assertCanCreateLanguage } from '../shared/utils/asserts/assertCanCreateLanguage';
 import { ReadLanguageService } from '../services/readLanguage.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class LanguageFactory {
   constructor(private readonly readLanguage: ReadLanguageService) {}
 
