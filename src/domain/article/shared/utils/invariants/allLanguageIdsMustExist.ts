@@ -1,4 +1,4 @@
-import { ExtraBookReviewValidationProps } from '../../../bookReview';
+import { ExtraBookReviewValidationProps } from '../../../../bookReview/bookReview';
 import { Invariant, success, fail } from '@derbent-ninjas/invariant-composer';
 import { LANGUAGES_DONT_EXIST } from '../../../../../shared/errorMessages';
 

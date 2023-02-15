@@ -4,6 +4,7 @@ import { CreateLanguageService } from './services/createLanguage.service';
 import { LANGUAGE_REPOSITORY } from './shared/tokens';
 import { InMemoryLanguageRepository } from './repositories/inMemoryLanguage.repository';
 import { ReadLanguageService } from './services/readLanguage.service';
+import { LanguageFactory } from './factories/language.factory';
 
 @Module({
   controllers: [LanguageController],
@@ -14,6 +15,7 @@ import { ReadLanguageService } from './services/readLanguage.service';
     },
     ReadLanguageService,
     CreateLanguageService,
+    LanguageFactory,
   ],
   exports: [ReadLanguageService],
 })

@@ -1,20 +1,18 @@
 import { fail, Invariant, success } from '@derbent-ninjas/invariant-composer';
 import { LANGUAGES_MUST_NOT_BE_REPEATED } from '../../../../../shared/errorMessages';
-import { BookReviewFormDto } from '../../dto/form/bookReviewForm.dto';
+import { ArticleFormDto } from '../../dto/form/articleFormData.dto';
 
-export function languagesMustNotBeRepeated(
-  props: BookReviewFormDto,
-): Invariant {
+export function languagesMustNotBeRepeated(props: ArticleFormDto): Invariant {
   const [languagesArray, languagesSet] = arrayAndSet(props);
 
   return languagesArray.length === languagesSet.size
     ? success()
     : fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED });
 
-  function arrayAndSet(props: BookReviewFormDto): [Array<string>, Set<string>] {
+  function arrayAndSet(props: ArticleFormDto): [Array<string>, Set<string>] {
     const languagesArray = [
-      props.article.originalLanguageId,
-      ...props.article.translations.map((t) => t.languageId),
+      props.originalLanguageId,
+      ...props.translations.map((t) => t.languageId),
     ];
     const languagesSet = new Set(languagesArray);
 

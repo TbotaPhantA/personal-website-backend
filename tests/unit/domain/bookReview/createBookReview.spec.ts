@@ -3,7 +3,7 @@ import { BookReviewFormDtoBuilder } from '../../../__fixtures__/builders/bookRev
 import { BookReview } from '../../../../src/domain/bookReview/bookReview';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
-import { success, fail } from '@derbent-ninjas/invariant-composer';
+import { success, fail, path } from '@derbent-ninjas/invariant-composer';
 import {
   LANGUAGES_DONT_EXIST,
   LANGUAGES_MUST_NOT_BE_REPEATED,
@@ -62,7 +62,7 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: success(),
+          expectedInvariant: path('article', success()),
         },
         {
           toString: () => '2',
@@ -83,7 +83,10 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
+          expectedInvariant: path(
+            'article',
+            fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
+          ),
         },
       ];
 
@@ -114,7 +117,10 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedInvariant: fail({ message: LANGUAGES_DONT_EXIST }),
+          expectedInvariant: path(
+            'article',
+            fail({ message: LANGUAGES_DONT_EXIST }),
+          ),
         },
       ];
 
