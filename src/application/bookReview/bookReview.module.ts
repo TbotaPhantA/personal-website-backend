@@ -6,6 +6,7 @@ import { InMemoryBookReviewRepository } from './repositories/inMemoryBookReview.
 import { ReadBookReviewService } from './services/readBookReview.service';
 import { BookReviewFactory } from './factories/bookReview.factory';
 import { LanguageModule } from '../language/language.module';
+import { UpdateBookReviewService } from './services/updateBookReview.service';
 
 @Module({
   imports: [LanguageModule],
@@ -17,6 +18,7 @@ import { LanguageModule } from '../language/language.module';
     },
     ReadBookReviewService,
     CreateBookReviewService,
+    UpdateBookReviewService,
     BookReviewFactory,
   ],
 })

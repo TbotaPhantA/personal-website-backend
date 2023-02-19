@@ -8,5 +8,6 @@ import { BookReview } from '../../../domain/bookReview/bookReview';
  */
 export interface BookReviewRepository {
   getAll(): Promise<BookReview[]>;
+  findById(id: string): Promise<BookReview | undefined>;
   save(bookReview: BookReview): Promise<BookReview>;
 }

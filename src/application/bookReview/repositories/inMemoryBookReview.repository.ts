@@ -11,6 +11,10 @@ export class InMemoryBookReviewRepository implements BookReviewRepository {
     return Array.from(this.bookReviewsMap.values());
   }
 
+  public async findById(id: string): Promise<BookReview | undefined> {
+    return this.bookReviewsMap.get(id);
+  }
+
   public async save(bookReview: BookReview): Promise<BookReview> {
     this.bookReviewsMap.set(bookReview.id, bookReview);
     return bookReview;

@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
+  Put,
   UseFilters,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -13,6 +15,7 @@ import { BookReviewFormDto } from '../../domain/bookReview/shared/dto/form/bookR
 import { ReadBookReviewService } from './services/readBookReview.service';
 import { AllBookReviewsOutputDto } from '../../domain/bookReview/shared/dto/output/allBookReviewsOutput.dto';
 import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
+import { UpdateBookReviewService } from './services/updateBookReview.service';
 
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
@@ -21,6 +24,7 @@ export class BookReviewController {
   constructor(
     private readonly readService: ReadBookReviewService,
     private readonly createService: CreateBookReviewService,
+    private readonly updateService: UpdateBookReviewService,
   ) {}
 
   @Get('all')
@@ -45,5 +49,19 @@ export class BookReviewController {
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
     return this.createService.createBookReview(dto);
+  }
+
+  @Put(':bookReviewId')
+  @ApiOperation({ summary: 'Update new book review' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Book review was successfully updated',
+    type: BookReviewOutputDto,
+  })
+  async updateBookReview(
+    @Param('bookReviewId') bookReviewId: string,
+    @Body() dto: BookReviewFormDto,
+  ): Promise<BookReviewOutputDto> {
+    return this.updateService.updateBookReview(bookReviewId, dto);
   }
 }

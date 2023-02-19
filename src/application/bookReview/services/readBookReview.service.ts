@@ -1,10 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AllBookReviewsOutputDto } from '../../../domain/bookReview/shared/dto/output/allBookReviewsOutput.dto';
 import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
 import { BookReviewRepository } from '../repositories/bookReviewRepository';
-import { ExtraBookReviewValidationProps } from '../../../domain/bookReview/bookReview';
+import {
+  BookReview,
+  ExtraBookReviewValidationProps,
+} from '../../../domain/bookReview/bookReview';
 import { ReadLanguageService } from '../../language/services/readLanguage.service';
 import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
+import { BOOK_REVIEW_NOT_FOUND } from '../../../shared/errorMessages';
 
 @Injectable()
 export class ReadBookReviewService {
@@ -17,6 +21,16 @@ export class ReadBookReviewService {
   public async getAll(): Promise<AllBookReviewsOutputDto> {
     const reviews = await this.repository.getAll();
     return AllBookReviewsOutputDto.from(reviews);
+  }
+
+  public async getById(id: string): Promise<BookReview> {
+    const review = await this.repository.findById(id);
+
+    if (!review) {
+      throw new BadRequestException(BOOK_REVIEW_NOT_FOUND);
+    }
+
+    return review;
   }
 
   public async getExtraValidationProps(
