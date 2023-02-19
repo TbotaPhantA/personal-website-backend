@@ -4,24 +4,32 @@ import { Article, ExtraArticleValidationProps } from '../article/article';
 import { assert, Invariant, path } from '@derbent-ninjas/invariant-composer';
 
 export type ExtraBookReviewValidationProps = ExtraArticleValidationProps;
+type BookReviewFormParams = ConstructorParameters<typeof BookReview>;
 
 export class BookReview {
   readonly id: string;
   readonly article: Article;
 
   constructor(
-    props: BookReviewFormDto,
+    dto: BookReviewFormDto,
     validation: ExtraBookReviewValidationProps,
   ) {
-    assert(BookReview.name, BookReview.canCreate(props, validation));
+    assert(BookReview.name, BookReview.canCreate(dto, validation));
     this.id = uuid();
-    this.article = new Article(props.article, validation);
+    this.article = new Article(dto.article, validation);
   }
 
   public static canCreate(
-    ...params: ConstructorParameters<typeof BookReview>
+    ...[dto, validation]: BookReviewFormParams
   ): Invariant {
-    const [props, validation] = params;
-    return path('article', Article.canCreate(props.article, validation));
+    return path('article', Article.canCreate(dto.article, validation));
+  }
+
+  public update(...[dto, validation]: BookReviewFormParams): void {
+    this.article.update(dto.article, validation);
+  }
+
+  public canUpdate(...[dto, validation]: BookReviewFormParams): Invariant {
+    return path('article', this.article.canUpdate(dto.article, validation));
   }
 }
