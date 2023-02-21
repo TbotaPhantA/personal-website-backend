@@ -11,7 +11,7 @@ export class LanguageOutputDto {
   public static from(language: Language): LanguageOutputDto {
     const dto = new LanguageOutputDto();
     dto.id = language.id;
-    dto.name = language.name;
+    dto.name = language._name;
     return dto;
   }
 }
