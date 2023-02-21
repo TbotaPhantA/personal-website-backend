@@ -7,15 +7,19 @@ export type ExtraBookReviewValidationProps = ExtraArticleValidationProps;
 type BookReviewFormParams = ConstructorParameters<typeof BookReview>;
 
 export class BookReview {
-  readonly id: string;
-  readonly article: Article;
+  private readonly _id: string;
+  public get id() { return this._id }
+
+  private _article: Article;
+  public get article() { return this._article }
+  private set article(article: Article) { this._article = article }
 
   constructor(
     dto: BookReviewFormDto,
     validation: ExtraBookReviewValidationProps,
   ) {
     assert(BookReview.name, BookReview.canCreate(dto, validation));
-    this.id = uuid();
+    this._id = uuid();
     this.article = new Article(dto.article, validation);
   }
 
