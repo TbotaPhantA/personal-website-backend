@@ -12,11 +12,25 @@ export interface ExtraArticleValidationProps {
 type ArticleFormParams = ConstructorParameters<typeof Article>;
 
 export class Article {
-  id: string;
-  originalLanguageId: string;
-  originalTitle: string;
-  originalContent: string;
-  translations: ArticleTranslation[];
+  private _id: string;
+  public get id() { return this._id }
+  private set id(id: string) { this._id = id }
+
+  private _originalLanguageId: string;
+  public get originalLanguageId() { return this._originalLanguageId }
+  private set originalLanguageId(languageId: string) { this._originalLanguageId = languageId }
+
+  private _originalTitle: string;
+  public get originalTitle() { return this._originalTitle }
+  private set originalTitle(title: string) { this._originalTitle = title }
+
+  private _originalContent: string;
+  public get originalContent() { return this._originalContent }
+  private set originalContent(content: string) { this._originalContent = content }
+
+  private _translations: ArticleTranslation[];
+  public get translations() { return this._translations }
+  private set translations(translations: ArticleTranslation[]) { this._translations = translations }
 
   constructor(dto: ArticleFormDto, validation: ExtraArticleValidationProps) {
     assert(Article.name, Article.canCreate(dto, validation));
