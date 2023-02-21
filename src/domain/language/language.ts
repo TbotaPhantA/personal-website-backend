@@ -8,11 +8,11 @@ export interface ExtraLanguageValidationProps {
 
 export class Language {
   private _id: string;
-  public get id() { return this._id }
+  get id() { return this._id }
   private set id(id: string) { this._id = id }
 
   private _name: string;
-  public get name() { return this._name }
+  get name() { return this._name }
   private set name(name: string) { this._name = name }
 
   constructor(dto: LanguageFormDto, validation: ExtraLanguageValidationProps) {
