@@ -3,15 +3,16 @@ import { Invariant, assert } from '@derbent-ninjas/invariant-composer';
 import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUnique';
 
 export interface ExtraLanguageValidationProps {
-  isIdUnique: boolean;
+  readonly isIdUnique: boolean;
 }
 
 export class Language {
   private _id: string;
+  private _name: string;
+
   get id() { return this._id }
   private set id(id: string) { this._id = id }
 
-  private _name: string;
   get name() { return this._name }
   private set name(name: string) { this._name = name }
 

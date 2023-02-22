@@ -13,22 +13,23 @@ type ArticleFormParams = ConstructorParameters<typeof Article>;
 
 export class Article {
   private _id: string;
+  private _originalLanguageId: string;
+  private _originalTitle: string;
+  private _originalContent: string;
+  private _translations: ArticleTranslation[];
+
   get id() { return this._id }
   private set id(id: string) { this._id = id }
 
-  private _originalLanguageId: string;
   get originalLanguageId() { return this._originalLanguageId }
   private set originalLanguageId(languageId: string) { this._originalLanguageId = languageId }
 
-  private _originalTitle: string;
   get originalTitle() { return this._originalTitle }
   private set originalTitle(title: string) { this._originalTitle = title }
 
-  private _originalContent: string;
   get originalContent() { return this._originalContent }
   private set originalContent(content: string) { this._originalContent = content }
 
-  private _translations: ArticleTranslation[];
   get translations() { return this._translations }
   private set translations(translations: ArticleTranslation[]) { this._translations = translations }
 

@@ -8,9 +8,10 @@ type BookReviewFormParams = ConstructorParameters<typeof BookReview>;
 
 export class BookReview {
   private readonly _id: string;
+  private _article: Article;
+
   get id() { return this._id }
 
-  private _article: Article;
   get article() { return this._article }
   private set article(article: Article) { this._article = article }
 
