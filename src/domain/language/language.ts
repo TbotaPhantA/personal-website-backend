@@ -5,6 +5,7 @@ import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUniq
 export interface ExtraLanguageValidationProps {
   readonly isIdUnique: boolean;
 }
+type CreateLanguageParams = [dto: LanguageFormDto, validation: ExtraLanguageValidationProps]
 
 export class Language {
   private _id: string;
@@ -22,10 +23,17 @@ export class Language {
     this.name = dto.name;
   }
 
-  public static canCreate(
-    ...params: ConstructorParameters<typeof Language>
-  ): Invariant {
-    const [, validation] = params;
+  public static canCreate(...[, validation]: CreateLanguageParams): Invariant {
+    return languageIdMustBeUnique(validation.isIdUnique);
+  }
+
+  public update(...[dto, validation]: CreateLanguageParams): void {
+    assert(Language.name, Language.canCreate(dto, validation))
+    this.id = dto.id;
+    this.name = dto.name;
+  }
+
+  public canUpdate(...[, validation]: CreateLanguageParams): Invariant {
     return languageIdMustBeUnique(validation.isIdUnique);
   }
 }
