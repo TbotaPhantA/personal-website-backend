@@ -48,7 +48,8 @@ export class BookReviewController {
   async createBookReview(
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    return this.createService.createBookReview(dto);
+    const fakeTransaction = {};
+    return this.createService.createBookReview(dto, fakeTransaction);
   }
 
   @Put(':bookReviewId')
@@ -62,6 +63,7 @@ export class BookReviewController {
     @Param('bookReviewId') bookReviewId: string,
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    return this.updateService.updateBookReview(bookReviewId, dto);
+    const fakeTransaction = {};
+    return this.updateService.updateBookReview(bookReviewId, dto, fakeTransaction);
   }
 }

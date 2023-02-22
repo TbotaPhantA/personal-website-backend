@@ -1,4 +1,5 @@
 import { BookReview } from '../../../domain/bookReview/bookReview';
+import { ITransaction } from '../shared/types/ITransaction';
 
 /**
  * TODO
@@ -8,6 +9,6 @@ import { BookReview } from '../../../domain/bookReview/bookReview';
  */
 export interface BookReviewRepository {
   getAll(): Promise<BookReview[]>;
-  findById(id: string): Promise<BookReview | undefined>;
-  save(bookReview: BookReview): Promise<BookReview>;
+  findById(id: string, transaction: ITransaction): Promise<BookReview | undefined>;
+  save(bookReview: BookReview, transaction: ITransaction): Promise<BookReview>;
 }

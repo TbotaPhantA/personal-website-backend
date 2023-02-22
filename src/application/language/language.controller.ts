@@ -44,6 +44,7 @@ export class LanguageController {
   async createLanguage(
     @Body() dto: LanguageFormDto,
   ): Promise<LanguageOutputDto> {
-    return this.createService.createLanguage(dto);
+    const fakeTransaction = {}
+    return this.createService.createLanguage(dto, fakeTransaction);
   }
 }

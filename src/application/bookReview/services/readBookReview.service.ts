@@ -9,6 +9,7 @@ import {
 import { ReadLanguageService } from '../../language/services/readLanguage.service';
 import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { BOOK_REVIEW_NOT_FOUND } from '../../../shared/errorMessages';
+import { ITransaction } from '../shared/types/ITransaction';
 
 @Injectable()
 export class ReadBookReviewService {
@@ -23,8 +24,8 @@ export class ReadBookReviewService {
     return AllBookReviewsOutputDto.from(reviews);
   }
 
-  public async getById(id: string): Promise<BookReview> {
-    const review = await this.repository.findById(id);
+  public async getById(id: string, transaction: ITransaction): Promise<BookReview> {
+    const review = await this.repository.findById(id, transaction);
 
     if (!review) {
       throw new BadRequestException(BOOK_REVIEW_NOT_FOUND);
@@ -35,6 +36,7 @@ export class ReadBookReviewService {
 
   public async getExtraValidationProps(
     dto: BookReviewFormDto,
+    transaction: ITransaction,
   ): Promise<ExtraBookReviewValidationProps> {
     const { originalLanguageId, translations } = dto.article;
     const languages = [
@@ -44,6 +46,7 @@ export class ReadBookReviewService {
 
     const doLanguagesExist = await this.readLanguage.doLanguagesExist(
       languages,
+      transaction,
     );
 
     return { doLanguagesExist };

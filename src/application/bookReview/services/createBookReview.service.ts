@@ -4,6 +4,7 @@ import { BookReviewOutputDto } from '../../../domain/bookReview/shared/dto/outpu
 import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
 import { BookReviewRepository } from '../repositories/bookReviewRepository';
 import { BookReviewFactory } from '../factories/bookReview.factory';
+import { ITransaction } from '../shared/types/ITransaction';
 
 @Injectable()
 export class CreateBookReviewService {
@@ -15,9 +16,10 @@ export class CreateBookReviewService {
 
   public async createBookReview(
     dto: BookReviewFormDto,
+    transaction: ITransaction,
   ): Promise<BookReviewOutputDto> {
-    const review = await this.bookReviewFactory.create(dto);
-    await this.repository.save(review);
+    const review = await this.bookReviewFactory.create(dto, transaction);
+    await this.repository.save(review, transaction);
     return BookReviewOutputDto.from(review);
   }
 }

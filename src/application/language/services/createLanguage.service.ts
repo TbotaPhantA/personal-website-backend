@@ -4,6 +4,7 @@ import { LanguageRepository } from '../repositories/language.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { LANGUAGE_REPOSITORY } from '../shared/tokens';
 import { LanguageFactory } from '../factories/language.factory';
+import { ITransaction } from '../../bookReview/shared/types/ITransaction';
 
 @Injectable()
 export class CreateLanguageService {
@@ -13,9 +14,9 @@ export class CreateLanguageService {
     private readonly languageFactory: LanguageFactory,
   ) {}
 
-  async createLanguage(dto: LanguageFormDto): Promise<LanguageOutputDto> {
-    const language = await this.languageFactory.create(dto);
-    await this.languageRepository.save(language);
+  async createLanguage(dto: LanguageFormDto, transaction: ITransaction): Promise<LanguageOutputDto> {
+    const language = await this.languageFactory.create(dto, transaction);
+    await this.languageRepository.save(language, transaction);
     return LanguageOutputDto.from(language);
   }
 }
