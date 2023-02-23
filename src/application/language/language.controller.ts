@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LanguageFormDto } from '../../domain/language/shared/dto/form/languageForm.dto';
-import { CreateLanguageService } from './services/createLanguage.service';
 import { LanguageOutputDto } from '../../domain/language/shared/dto/output/languageOutput.dto';
 import { AllLanguagesOutputDto } from '../../domain/language/shared/dto/output/allLanguagesOutput.dto';
 import { ReadLanguageService } from './services/readLanguage.service';
 import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
+import { CreateLanguageTransaction } from './services/createLanguage/createLanguage.transaction';
 
 @Controller('language')
 @UseFilters(AllExceptionFilter)
@@ -20,7 +20,7 @@ import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filt
 export class LanguageController {
   constructor(
     private readonly readService: ReadLanguageService,
-    private readonly createService: CreateLanguageService,
+    private readonly createLanguageTransaction: CreateLanguageTransaction,
   ) {}
 
   @Get('all')
@@ -44,7 +44,6 @@ export class LanguageController {
   async createLanguage(
     @Body() dto: LanguageFormDto,
   ): Promise<LanguageOutputDto> {
-    const fakeTransaction = {}
-    return this.createService.createLanguage(dto, fakeTransaction);
+    return this.createLanguageTransaction.run(dto);
   }
 }
