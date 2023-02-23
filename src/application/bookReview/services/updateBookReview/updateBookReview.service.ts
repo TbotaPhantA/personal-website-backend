@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BookReviewOutputDto } from '../../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
-import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
-import { ReadBookReviewService } from './readBookReview.service';
-import { assertCanUpdateBookReview } from '../shared/utils/asserts/assertCanUpdateBookReview';
-import { ITransaction } from '../shared/types/ITransaction';
-import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
-import { BookReviewRepository } from '../repositories/bookReviewRepository';
+import { BookReviewOutputDto } from '../../../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
+import { BookReviewFormDto } from '../../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
+import { ReadBookReviewService } from '../readBookReview.service';
+import { assertCanUpdateBookReview } from '../../shared/utils/asserts/assertCanUpdateBookReview';
+import { ITransaction } from '../../shared/types/ITransaction';
+import { BOOK_REVIEW_REPOSITORY } from '../../shared/tokens';
+import { BookReviewRepository } from '../../repositories/bookReviewRepository';
 
 @Injectable()
 export class UpdateBookReviewService {

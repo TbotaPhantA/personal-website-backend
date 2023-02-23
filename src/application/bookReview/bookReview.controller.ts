@@ -10,12 +10,12 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BookReviewOutputDto } from '../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
-import { CreateBookReviewService } from './services/createBookReview.service';
 import { BookReviewFormDto } from '../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { ReadBookReviewService } from './services/readBookReview.service';
 import { AllBookReviewsOutputDto } from '../../domain/bookReview/shared/dto/output/allBookReviewsOutput.dto';
 import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
-import { UpdateBookReviewService } from './services/updateBookReview.service';
+import { CreateBookReviewTransaction } from './services/createBookReview/createBookReview.transaction';
+import { UpdateBookReviewTransaction } from './services/updateBookReview/updateBookReview.transaction';
 
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
@@ -23,8 +23,8 @@ import { UpdateBookReviewService } from './services/updateBookReview.service';
 export class BookReviewController {
   constructor(
     private readonly readService: ReadBookReviewService,
-    private readonly createService: CreateBookReviewService,
-    private readonly updateService: UpdateBookReviewService,
+    private readonly createServiceTransaction: CreateBookReviewTransaction,
+    private readonly updateTransaction: UpdateBookReviewTransaction,
   ) {}
 
   @Get('all')
@@ -48,8 +48,7 @@ export class BookReviewController {
   async createBookReview(
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    const fakeTransaction = {};
-    return this.createService.createBookReview(dto, fakeTransaction);
+    return this.createServiceTransaction.run(dto);
   }
 
   @Put(':bookReviewId')
@@ -63,7 +62,6 @@ export class BookReviewController {
     @Param('bookReviewId') bookReviewId: string,
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    const fakeTransaction = {};
-    return this.updateService.updateBookReview(bookReviewId, dto, fakeTransaction);
+    return this.updateTransaction.run(bookReviewId, dto);
   }
 }
