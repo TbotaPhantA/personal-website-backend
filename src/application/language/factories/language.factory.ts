@@ -10,10 +10,8 @@ export class LanguageFactory {
   constructor(private readonly readLanguage: ReadLanguageService) {}
 
   async create(dto: LanguageFormDto, transaction: ITransaction) {
-    const validation = await this.readLanguage.getExtraLanguageValidationProps(
-      dto,
-      transaction,
-    );
+    const validation = await this.readLanguage
+      .getExtraLanguageValidationProps(dto, transaction);
     const canCreate = Language.canCreate(dto, validation);
     assertCanCreateLanguage(canCreate);
     return new Language(dto, validation);
