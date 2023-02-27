@@ -14,8 +14,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - run: npm run ci
-      - run: npm run build
-      - run: npm run lint
-      - run: npm run test:no-cache
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Node LTS versions
+        uses: msimerson/node-lts-versions@v1.1.1
+      - name: setup Node.js
+        uses: actions/setup-node@v3
+      - name: Install dependencies
+        run: npm run ci
+      - name: Build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test:no-cache
