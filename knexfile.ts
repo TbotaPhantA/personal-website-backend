@@ -23,8 +23,4 @@ const config: { [key: string]: Knex.Config } = {
   },
 };
 
-console.log({
-  config: util.inspect(config, { depth: 15 }),
-})
-
 module.exports = config;
