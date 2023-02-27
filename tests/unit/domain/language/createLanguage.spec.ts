@@ -8,13 +8,13 @@ describe('Create Language', () => {
   describe('constructor', () => {
     test('when proper dto passed - should be defined', () => {
       const dto = LanguageFormDtoBuilder.defaultOnlyRequired.result;
-      const language = new Language(dto, { isIdUnique: true });
+      const language = Language.createByDto(dto, { isIdUnique: true });
       expect(language).toBeDefined();
     });
 
     test('when validation fails - should throw', () => {
       const dto = LanguageFormDtoBuilder.defaultOnlyRequired.result;
-      expect(() => new Language(dto, { isIdUnique: false })).toThrow();
+      expect(() => Language.createByDto(dto, { isIdUnique: false })).toThrow();
     });
   });
 

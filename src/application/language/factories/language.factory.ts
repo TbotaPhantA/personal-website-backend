@@ -14,6 +14,6 @@ export class LanguageFactory {
       .getExtraLanguageValidationProps(dto, transaction);
     const canCreate = Language.canCreate(dto, validation);
     assertCanCreateLanguage(canCreate);
-    return new Language(dto, validation);
+    return Language.createByDto(dto, validation);
   }
 }

@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LANGUAGE_REPOSITORY } from '../shared/tokens';
 import { LanguageRepository } from '../repositories/language.repository';
 import { AllLanguagesOutputDto } from '../../../domain/language/shared/dto/output/allLanguagesOutput.dto';
-import { ExtraLanguageValidationProps } from '../../../domain/language/language';
 import { LanguageFormDto } from '../../../domain/language/shared/dto/form/languageForm.dto';
 import { ITransaction } from '../../bookReview/shared/types/ITransaction';
+import { ExtraLanguageValidationProps } from '../../../domain/language/shared/types/extraLanguageValidationProps';
 
 @Injectable()
 export class ReadLanguageService {

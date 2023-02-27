@@ -2,18 +2,19 @@ import { LanguageFormDtoBuilder } from '../../../__fixtures__/builders/language/
 import { fail, success } from '@derbent-ninjas/invariant-composer';
 import { LANGUAGE_ID_MUST_BE_UNIQUE } from '../../../../src/shared/errorMessages';
 import { createLanguage } from '../../../__fixtures__/factories/createLanguage';
+import { UpdatableLanguage } from '../../../../src/domain/language/updatableLanguage';
 
 describe('Update language', function() {
   describe('update', () => {
     test('valid dto - should not throw', () => {
-      const language = createLanguage();
+      const language = new UpdatableLanguage(createLanguage());
       const validDto = LanguageFormDtoBuilder.defaultOnlyRequired.result;
       const validValidation = { isIdUnique: true };
       expect(() => language.update(validDto, validValidation)).not.toThrow();
     })
 
     test('not valid dto - should throw', () => {
-      const language = createLanguage();
+      const language = new UpdatableLanguage(createLanguage());
       const validDto = LanguageFormDtoBuilder.defaultOnlyRequired.result;
       const invalidValidation = { isIdUnique: false };
       expect(() => language.update(validDto, invalidValidation)).toThrow();
@@ -43,7 +44,7 @@ describe('Update language', function() {
 
       test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
         // arrange
-        const language = createLanguage();
+        const language = new UpdatableLanguage(createLanguage());
         // act
         const canUpdate = language.canUpdate(dto, validation);
         // assert
