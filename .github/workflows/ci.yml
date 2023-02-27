@@ -21,7 +21,7 @@ jobs:
       - name: setup Node.js
         uses: actions/setup-node@v3
       - name: Install dependencies
-        run: npm run ci
+        run: npm ci
       - name: Build
         run: npm run build
       - name: Lint
