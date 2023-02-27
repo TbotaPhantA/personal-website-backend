@@ -1,6 +1,6 @@
-import { ExtraBookReviewValidationProps } from '../../../../bookReview/bookReview';
 import { Invariant, success, fail } from '@derbent-ninjas/invariant-composer';
 import { LANGUAGES_DONT_EXIST } from '../../../../../shared/errorMessages';
+import { ExtraBookReviewValidationProps } from '../../../../bookReview/shared/types/extraBookReviewValidationProps';
 
 export function allLanguageIdsMustExist(
   validation: ExtraBookReviewValidationProps,

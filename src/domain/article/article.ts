@@ -4,56 +4,36 @@ import { ArticleTranslation } from './articleTranslation/articleTranslation';
 import { assert, compose, Invariant } from '@derbent-ninjas/invariant-composer';
 import { languagesMustNotBeRepeated } from './shared/utils/invariants/languagesMustNotBeRepeated';
 import { allLanguageIdsMustExist } from './shared/utils/invariants/allLanguageIdsMustExist';
-
-export interface ExtraArticleValidationProps {
-  doLanguagesExist: boolean;
-}
-
-type ArticleFormParams = ConstructorParameters<typeof Article>;
+import { CreateArticleByDtoParams } from './shared/types/createArticleByDtoParams';
+import { ExtraArticleValidationProps } from './shared/types/extraArticleValidationProps';
+import { WithoutMethods } from '../../shared/types/withoutMethods';
 
 export class Article {
-  private _id: string;
-  private _originalLanguageId: string;
-  private _originalTitle: string;
-  private _originalContent: string;
-  private _translations: ArticleTranslation[];
+  readonly id: string;
+  readonly originalLanguageId: string;
+  readonly originalTitle: string;
+  readonly originalContent: string;
+  readonly translations: ArticleTranslation[];
 
-  get id() { return this._id }
-  private set id(id: string) { this._id = id }
-
-  get originalLanguageId() { return this._originalLanguageId }
-  private set originalLanguageId(languageId: string) { this._originalLanguageId = languageId }
-
-  get originalTitle() { return this._originalTitle }
-  private set originalTitle(title: string) { this._originalTitle = title }
-
-  get originalContent() { return this._originalContent }
-  private set originalContent(content: string) { this._originalContent = content }
-
-  get translations() { return this._translations }
-  private set translations(translations: ArticleTranslation[]) { this._translations = translations }
-
-  constructor(dto: ArticleFormDto, validation: ExtraArticleValidationProps) {
-    assert(Article.name, Article.canCreate(dto, validation));
-    this.id = uuid();
-    this.assignDtoValues(dto);
+  constructor(article: WithoutMethods<Article>) {
+    this.id = article.id;
+    this.originalLanguageId = article.originalLanguageId;
+    this.originalTitle = article.originalTitle;
+    this.originalContent = article.originalContent;
+    this.translations = article.translations;
   }
 
-  public static canCreate(...params: ArticleFormParams): Invariant {
+  public static createByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): Article {
+    assert(Article.name, Article.canCreateByDto(dto, validation));
+    const articleId = uuid();
+    return Article.createInstanceByDtoAndId(dto, articleId);
+  }
+
+  public static canCreateByDto(...params: CreateArticleByDtoParams): Invariant {
     return Article.validateArticleForm(...params);
   }
 
-  public update(...params: ArticleFormParams): void {
-    const [dto] = params;
-    assert(Article.name, this.canUpdate(...params));
-    this.assignDtoValues(dto);
-  }
-
-  public canUpdate(...params: ArticleFormParams): Invariant {
-    return Article.validateArticleForm(...params);
-  }
-
-  private static validateArticleForm(...params: ArticleFormParams): Invariant {
+  protected static validateArticleForm(...params: CreateArticleByDtoParams): Invariant {
     const [props, validation] = params;
 
     return compose(
@@ -62,13 +42,11 @@ export class Article {
     );
   }
 
-  private assignDtoValues(dto: ArticleFormDto): void {
-    this.originalLanguageId = dto.originalLanguageId;
-    this.originalTitle = dto.originalTitle;
-    this.originalContent = dto.originalContent;
-    this.translations = dto.translations.map(
-      (translation) =>
-        new ArticleTranslation({ ...translation, articleId: this.id }),
-    );
+  protected static createInstanceByDtoAndId(dto: ArticleFormDto, articleId: string) {
+    return new Article({
+      ...dto,
+      id: articleId,
+      translations: dto.translations.map(t => new ArticleTranslation({ ...t, articleId }))
+    });
   }
 }

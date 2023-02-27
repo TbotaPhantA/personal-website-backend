@@ -12,13 +12,13 @@ describe('create Article', () => {
   describe('constructor', () => {
     test('when proper dto passed - should be defined', () => {
       const dto = ArticleFormDtoBuilder.defaultWithTranslation.result;
-      const article = new Article(dto, { doLanguagesExist: true });
+      const article = Article.createByDto(dto, { doLanguagesExist: true });
       expect(article).toBeDefined();
     });
 
     test('when invalid dto passed - should throw', () => {
       const dto = ArticleFormDtoBuilder.defaultWithTranslation.result;
-      expect(() => new Article(dto, { doLanguagesExist: false })).toThrow();
+      expect(() => Article.createByDto(dto, { doLanguagesExist: false })).toThrow();
     });
   });
 
@@ -66,7 +66,7 @@ describe('create Article', () => {
       ];
 
       test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = Article.canCreate(dto, validation);
+        const canCreate = Article.canCreateByDto(dto, validation);
         expect(canCreate).toStrictEqual(expectedInvariant);
       });
     });
@@ -95,7 +95,7 @@ describe('create Article', () => {
       ];
 
       test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = Article.canCreate(dto, validation);
+        const canCreate = Article.canCreateByDto(dto, validation);
 
         expect(canCreate).toStrictEqual(expectedInvariant);
       });

@@ -1,40 +1,35 @@
 import { BookReviewFormDto } from './shared/dto/form/bookReviewForm.dto';
 import { v4 as uuid } from 'uuid';
-import { Article, ExtraArticleValidationProps } from '../article/article';
+import { Article } from '../article/article';
 import { assert, Invariant, path } from '@derbent-ninjas/invariant-composer';
-
-export type ExtraBookReviewValidationProps = ExtraArticleValidationProps;
-type BookReviewFormParams = ConstructorParameters<typeof BookReview>;
+import { WithoutMethods } from '../../shared/types/withoutMethods';
+import { ExtraBookReviewValidationProps } from './shared/types/extraBookReviewValidationProps';
+import { CreateBookReviewByDtoParams } from './shared/types/createBookReviewByDtoParams';
 
 export class BookReview {
-  private readonly _id: string;
-  private _article: Article;
+  readonly id: string;
+  readonly article: Article;
 
-  get id() { return this._id }
+  constructor(review: WithoutMethods<BookReview>) {
+    this.id = review.id;
+    this.article = review.article;
+  }
 
-  get article() { return this._article }
-  private set article(article: Article) { this._article = article }
-
-  constructor(
+  public static createByDto(
     dto: BookReviewFormDto,
     validation: ExtraBookReviewValidationProps,
-  ) {
-    assert(BookReview.name, BookReview.canCreate(dto, validation));
-    this._id = uuid();
-    this.article = new Article(dto.article, validation);
+  ): BookReview {
+    assert(BookReview.name, BookReview.canCreateByDto(dto, validation));
+    const reviewId = uuid();
+    return new BookReview({
+      id: reviewId,
+      article: Article.createByDto(dto.article, validation),
+    });
   }
 
-  public static canCreate(
-    ...[dto, validation]: BookReviewFormParams
+  public static canCreateByDto(
+    ...[dto, validation]: CreateBookReviewByDtoParams
   ): Invariant {
-    return path('article', Article.canCreate(dto.article, validation));
-  }
-
-  public update(...[dto, validation]: BookReviewFormParams): void {
-    this.article.update(dto.article, validation);
-  }
-
-  public canUpdate(...[dto, validation]: BookReviewFormParams): Invariant {
-    return path('article', this.article.canUpdate(dto.article, validation));
+    return path('article', Article.canCreateByDto(dto.article, validation));
   }
 }

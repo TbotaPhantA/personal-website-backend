@@ -11,8 +11,8 @@ export class BookReviewFactory {
 
   public async create(dto: BookReviewFormDto, transaction: ITransaction): Promise<BookReview> {
     const validation = await this.readBookReview.getExtraValidationProps(dto, transaction);
-    const canCreate = BookReview.canCreate(dto, validation);
+    const canCreate = BookReview.canCreateByDto(dto, validation);
     assertCanCreateBookReview(canCreate);
-    return new BookReview(dto, validation);
+    return BookReview.createByDto(dto, validation);
   }
 }

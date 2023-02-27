@@ -2,14 +2,12 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { AllBookReviewsOutputDto } from '../../../domain/bookReview/shared/dto/output/allBookReviewsOutput.dto';
 import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
 import { BookReviewRepository } from '../repositories/bookReviewRepository';
-import {
-  BookReview,
-  ExtraBookReviewValidationProps,
-} from '../../../domain/bookReview/bookReview';
 import { ReadLanguageService } from '../../language/services/readLanguage.service';
 import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { BOOK_REVIEW_NOT_FOUND } from '../../../shared/errorMessages';
 import { ITransaction } from '../shared/types/ITransaction';
+import { ExtraBookReviewValidationProps } from '../../../domain/bookReview/shared/types/extraBookReviewValidationProps';
+import { UpdatableBookReview } from '../../../domain/bookReview/updatableBookReview';
 
 @Injectable()
 export class ReadBookReviewService {
@@ -24,14 +22,14 @@ export class ReadBookReviewService {
     return AllBookReviewsOutputDto.from(reviews);
   }
 
-  public async getById(id: string, transaction: ITransaction): Promise<BookReview> {
+  public async getById(id: string, transaction: ITransaction): Promise<UpdatableBookReview> {
     const review = await this.repository.findById(id, transaction);
 
     if (!review) {
       throw new BadRequestException(BOOK_REVIEW_NOT_FOUND);
     }
 
-    return review;
+    return new UpdatableBookReview(review);
   }
 
   public async getExtraValidationProps(

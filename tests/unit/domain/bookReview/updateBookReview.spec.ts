@@ -7,17 +7,18 @@ import {
 } from '../../../../src/shared/errorMessages';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
+import { UpdatableBookReview } from '../../../../src/domain/bookReview/updatableBookReview';
 
 const createValidBookReview = () => {
   const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
 
-  return new BookReview(dto, { doLanguagesExist: true });
+  return BookReview.createByDto(dto, { doLanguagesExist: true });
 };
 
 describe('Update BookReview', () => {
   describe('update', () => {
     test('valid new dto - should not throw', () => {
-      const bookReview = createValidBookReview();
+      const bookReview = new UpdatableBookReview(createValidBookReview());
 
       const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
 
@@ -27,7 +28,7 @@ describe('Update BookReview', () => {
     });
 
     test('invalid params - should throw', () => {
-      const bookReview = createValidBookReview();
+      const bookReview = new UpdatableBookReview(createValidBookReview());
 
       const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
 
@@ -75,7 +76,7 @@ describe('Update BookReview', () => {
     ];
 
     test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-      const bookReview = createValidBookReview();
+      const bookReview = new UpdatableBookReview(createValidBookReview());
       const canUpdate = bookReview.canUpdate(dto, validation);
       expect(canUpdate).toStrictEqual(expectedInvariant);
     });

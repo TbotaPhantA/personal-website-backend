@@ -14,7 +14,7 @@ describe('Create BookReview', () => {
     test('when proper dto passed - should be defined', () => {
       const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
       const validation = { doLanguagesExist: true };
-      const bookReview = new BookReview(dto, validation);
+      const bookReview = BookReview.createByDto(dto, validation);
       expect(bookReview).toBeDefined();
     });
 
@@ -36,7 +36,7 @@ describe('Create BookReview', () => {
 
       const validation = { doLanguagesExist: true };
 
-      expect(() => new BookReview(invalidData, validation)).toThrow();
+      expect(() => BookReview.createByDto(invalidData, validation)).toThrow();
     });
   });
 
@@ -91,7 +91,7 @@ describe('Create BookReview', () => {
       ];
 
       test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = BookReview.canCreate(dto, validation);
+        const canCreate = BookReview.canCreateByDto(dto, validation);
         expect(canCreate).toStrictEqual(expectedInvariant);
       });
     });
@@ -125,7 +125,7 @@ describe('Create BookReview', () => {
       ];
 
       test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = BookReview.canCreate(dto, validation);
+        const canCreate = BookReview.canCreateByDto(dto, validation);
 
         expect(canCreate).toStrictEqual(expectedInvariant);
       });
