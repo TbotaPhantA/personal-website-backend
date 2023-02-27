@@ -9,9 +9,9 @@ export class UpdatableLanguage extends Language {
     super(language);
   }
 
-  public update(...[dto, validation]: CreateLanguageByDtoParams): Language {
+  public update(...[dto, validation]: CreateLanguageByDtoParams): UpdatableLanguage {
     assert(Language.name, this.canUpdate(dto, validation));
-    return Language.createInstanceFromDto(dto);
+    return new UpdatableLanguage(Language.createInstanceFromDto(dto));
   }
 
   public canUpdate(...[, validation]: CreateLanguageByDtoParams): Invariant {
