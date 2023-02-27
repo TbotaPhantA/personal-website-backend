@@ -3,7 +3,6 @@ import { WithoutMethods } from '../../shared/types/withoutMethods';
 import { UpdatableArticle } from '../article/updatableArticle';
 import { CreateBookReviewByDtoParams } from './shared/types/createBookReviewByDtoParams';
 import { assert, Invariant, path } from '@derbent-ninjas/invariant-composer';
-import { Article } from '../article/article';
 
 export class UpdatableBookReview extends BookReview {
   readonly article: UpdatableArticle;
@@ -18,7 +17,7 @@ export class UpdatableBookReview extends BookReview {
     const reviewId = this.id;
     return new UpdatableBookReview({
       id: reviewId,
-      article: Article.createByDto(dto.article, validation),
+      article: this.article.update(dto.article, validation),
     });
   }
 

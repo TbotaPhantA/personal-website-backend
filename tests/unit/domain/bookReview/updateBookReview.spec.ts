@@ -27,6 +27,15 @@ describe('Update BookReview', () => {
       ).not.toThrow();
     });
 
+    test('valid new dto - article id should stay the same', () => {
+      const bookReview = new UpdatableBookReview(createValidBookReview());
+
+      const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
+      const articleId = bookReview.article.id;
+      const newBookReview = bookReview.update(dto, { doLanguagesExist: true })
+      expect(newBookReview.article.id).toStrictEqual(articleId);
+    })
+
     test('invalid params - should throw', () => {
       const bookReview = new UpdatableBookReview(createValidBookReview());
 
