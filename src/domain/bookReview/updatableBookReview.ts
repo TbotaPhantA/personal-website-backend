@@ -1,13 +1,13 @@
 import { BookReview } from './bookReview';
-import { WithoutMethods } from '../../shared/types/withoutMethods';
 import { UpdatableArticle } from '../article/updatableArticle';
 import { CreateBookReviewByDtoParams } from './shared/types/createBookReviewByDtoParams';
 import { assert, Invariant, path } from '@derbent-ninjas/invariant-composer';
+import { RawBookReview } from './shared/types/rawBookReview';
 
 export class UpdatableBookReview extends BookReview {
   readonly article: UpdatableArticle;
 
-  constructor(review: WithoutMethods<BookReview>) {
+  constructor(review: RawBookReview) {
     super(review);
     this.article = new UpdatableArticle(review.article);
   }
