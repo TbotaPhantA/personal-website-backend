@@ -1,2 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ITransaction {}
+export interface ITransaction {
+  [key: string]: any;
+}
