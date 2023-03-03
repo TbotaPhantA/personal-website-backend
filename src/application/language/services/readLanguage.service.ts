@@ -18,15 +18,21 @@ export class ReadLanguageService {
     return AllLanguagesOutputDto.from(languages);
   }
 
-  public async doLanguagesExist(languages: string[], transaction: ITransaction): Promise<boolean> {
-    return this.languageRepository.doLanguagesExist(languages, transaction);
+  public async doLanguagesExist(languageIds: string[], transaction: ITransaction): Promise<boolean> {
+    const foundLanguages = await this.languageRepository.findManyByIds(languageIds, transaction)
+    return foundLanguages.length === languageIds.length;
   }
 
   public async getExtraLanguageValidationProps(
     dto: LanguageFormDto,
     transaction: ITransaction,
   ): Promise<ExtraLanguageValidationProps> {
-    const isIdUnique = await this.languageRepository.isLanguageIdUnique(dto.id, transaction);
+    const isIdUnique = await this.isLanguageIdUnique(dto.id, transaction);
     return { isIdUnique };
+  }
+
+  private async isLanguageIdUnique(languageId: string, transaction: ITransaction): Promise<boolean> {
+    const foundLanguage = await this.languageRepository.findById(languageId, transaction);
+    return !foundLanguage;
   }
 }

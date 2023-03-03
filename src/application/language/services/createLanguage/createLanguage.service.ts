@@ -16,7 +16,7 @@ export class CreateLanguageService {
 
   async createLanguage(dto: LanguageFormDto, transaction: ITransaction): Promise<LanguageOutputDto> {
     const language = await this.languageFactory.create(dto, transaction);
-    await this.languageRepository.save(language, transaction);
+    await this.languageRepository.insert(language, transaction);
     return LanguageOutputDto.from(language);
   }
 }

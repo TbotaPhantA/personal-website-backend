@@ -3,7 +3,8 @@ import { ITransaction } from '../../bookReview/shared/types/ITransaction';
 
 export interface LanguageRepository {
   findAll(): Promise<Language[]>;
-  save(language: Language, transaction: ITransaction): Promise<Language>;
-  doLanguagesExist(languages: string[], transaction: ITransaction): Promise<boolean>;
-  isLanguageIdUnique(languageId: string, transaction: ITransaction): Promise<boolean>;
+  insert(language: Language, transaction: ITransaction): Promise<Language>;
+  update(language: Language, transaction: ITransaction): Promise<Language>;
+  findById(id: string, transaction: ITransaction): Promise<Language | undefined>;
+  findManyByIds(ids: string[], transaction: ITransaction): Promise<Language[]>;
 }

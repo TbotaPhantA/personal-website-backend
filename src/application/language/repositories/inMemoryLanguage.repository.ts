@@ -10,16 +10,21 @@ export class InMemoryLanguageRepository implements LanguageRepository {
     return Array.from(this.languagesMap.values());
   }
 
-  async save(language: Language): Promise<Language> {
+  async insert(language: Language): Promise<Language> {
     this.languagesMap.set(language.id, language);
     return language;
   }
 
-  async doLanguagesExist(languages: string[]): Promise<boolean> {
-    return languages.every((l) => this.languagesMap.has(l));
+  async update(language: Language): Promise<Language> {
+    this.languagesMap.set(language.id, language);
+    return language;
   }
 
-  async isLanguageIdUnique(languageId: string): Promise<boolean> {
-    return !this.languagesMap.has(languageId);
+  async findById(id: string): Promise<Language | undefined> {
+    return this.languagesMap.get(id);
+  }
+
+  async findManyByIds(ids: string[]): Promise<Language[]> {
+    return ids.map(id => this.languagesMap.get(id)).filter(Boolean) as Language[];
   }
 }
