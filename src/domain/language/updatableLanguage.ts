@@ -1,13 +1,11 @@
 import { Language } from './language';
-import { WithoutMethods } from '../../shared/types/withoutMethods';
 import { CreateLanguageByDtoParams } from './shared/types/createLanguageByDtoParams';
 import { assert, Invariant } from '@derbent-ninjas/invariant-composer';
 import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUnique';
+import { RawLanguage } from './shared/types/rawLanguage';
 
 export class UpdatableLanguage extends Language {
-  constructor(language: WithoutMethods<Language>) {
-    super(language);
-  }
+  constructor(language: RawLanguage) { super(language) }
 
   public update(...[dto, validation]: CreateLanguageByDtoParams): UpdatableLanguage {
     assert(Language.name, this.canUpdate(dto, validation));

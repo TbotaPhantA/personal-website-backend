@@ -1,15 +1,15 @@
 import { LanguageFormDto } from './shared/dto/form/languageForm.dto';
 import { Invariant, assert } from '@derbent-ninjas/invariant-composer';
 import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUnique';
-import { WithoutMethods } from '../../shared/types/withoutMethods';
 import { ExtraLanguageValidationProps } from './shared/types/extraLanguageValidationProps';
 import { CreateLanguageByDtoParams } from './shared/types/createLanguageByDtoParams';
+import { RawLanguage } from './shared/types/rawLanguage';
 
 export class Language {
   readonly id: string;
   readonly name: string;
 
-  constructor(language: WithoutMethods<Language>) {
+  constructor(language: RawLanguage) {
     this.id = language.id;
     this.name = language.name;
   }
