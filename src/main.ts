@@ -10,7 +10,7 @@ import * as util from 'util';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const port = 3000;
+  const port = process.env.REST_PORT;
 
   const app = await createApp();
 
