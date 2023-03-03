@@ -10,5 +10,11 @@ import { getConfigToken } from './shared/getConfigToken';
       useValue: config,
     }
   ],
+  exports: [
+    {
+      provide: getConfigToken(),
+      useValue: config,
+    }
+  ],
 })
 export class ConfigModule {}

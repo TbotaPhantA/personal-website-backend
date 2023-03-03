@@ -8,7 +8,13 @@ import knex from './knex';
     {
       provide: getKnexToken(),
       useValue: knex,
-    }
+    },
+  ],
+  exports: [
+    {
+      provide: getKnexToken(),
+      useValue: knex,
+    },
   ],
 })
 export class KnexModule {}
