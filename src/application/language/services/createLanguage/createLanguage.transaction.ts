@@ -14,8 +14,7 @@ export class CreateLanguageTransaction {
   ) {}
 
   public async run(dto: LanguageFormDto): Promise<LanguageOutputDto> {
-    return await this.knex.transaction(transaction => {
-      return this.createLanguageService.createLanguage(dto, transaction);
-    })
+    const transaction = await this.knex.transaction({ isolationLevel: 'serializable' });
+    return this.createLanguageService.createLanguage(dto, transaction);
   }
 }
