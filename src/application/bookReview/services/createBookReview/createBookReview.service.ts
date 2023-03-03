@@ -19,7 +19,7 @@ export class CreateBookReviewService {
     transaction: ITransaction,
   ): Promise<BookReviewOutputDto> {
     const review = await this.bookReviewFactory.create(dto, transaction);
-    await this.repository.save(review, transaction);
+    await this.repository.insert(review, transaction);
     return BookReviewOutputDto.from(review);
   }
 }

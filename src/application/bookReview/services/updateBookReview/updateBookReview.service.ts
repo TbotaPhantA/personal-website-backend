@@ -24,7 +24,7 @@ export class UpdateBookReviewService {
     const validation = await this.readBookReview.getExtraValidationProps(dto, transaction);
     assertCanUpdateBookReview(review.canUpdate(dto, validation));
     const newReview = review.update(dto, validation);
-    await this.repository.save(newReview, transaction);
+    await this.repository.update(newReview, transaction);
     return BookReviewOutputDto.from(newReview);
   }
 }
