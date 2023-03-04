@@ -10,7 +10,7 @@ export class BookReviewKnexRepository implements BookReviewRepository {
   constructor(@InjectKnex() private readonly knex: Knex) {}
 
   async findById(id: string, transaction: Knex.Transaction): Promise<BookReview | undefined> {
-    const rawBookReviews = await this.findAllQuery(transaction).where({ id });
+    const rawBookReviews = await this.findAllQuery(transaction).where({ 'book_reviews.id': id });
     return rawBookReviews?.[0];
   }
 
@@ -77,20 +77,28 @@ export class BookReviewKnexRepository implements BookReviewRepository {
   }
 
   async update(bookReview: BookReview, transaction: Knex.Transaction): Promise<BookReview> {
-    // TODO: remove orphaned translations
     return transaction
       .with(
-        'inserted_article',
+        'updated_article',
         transaction.update({
           id: bookReview.article.id,
           original_language_id: bookReview.article.originalLanguageId,
           original_title: bookReview.article.originalTitle,
           original_content: bookReview.article.originalContent,
-        }).into('articles'),
+        })
+        .where({ id: bookReview.article.id })
+        .into('articles'),
+      )
+      .with(
+        'removed_article_translations',
+        transaction
+          .where({ article_id: bookReview.article.id })
+          .del()
+          .into('article_translations'),
       )
       .with(
         'inserted_article_translations',
-        transaction.update(bookReview.article.translations.map(t => ({
+        transaction.insert(bookReview.article.translations.map(t => ({
           id: t.id,
           article_id: t.articleId,
           language_id: t.languageId,
@@ -102,6 +110,7 @@ export class BookReviewKnexRepository implements BookReviewRepository {
         id: bookReview.id,
         article_id: bookReview.article.id,
       })
-      .into('book_reviews');
+      .where({ id: bookReview.id })
+      .into('book_reviews')
   }
 }
