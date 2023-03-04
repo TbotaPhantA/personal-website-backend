@@ -46,7 +46,7 @@ export class Article {
     return new Article({
       ...dto,
       id: articleId,
-      translations: dto.translations.map(t => new ArticleTranslation({ ...t, articleId }))
+      translations: dto.translations.map(t => ArticleTranslation.createByDto({ ...t, articleId }))
     });
   }
 }

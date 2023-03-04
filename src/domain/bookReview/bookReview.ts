@@ -12,7 +12,7 @@ export class BookReview {
 
   constructor(review: RawBookReview) {
     this.id = review.id;
-    this.article = review.article;
+    this.article = new Article(review.article);
   }
 
   public static createByDto(
