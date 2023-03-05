@@ -6,6 +6,10 @@ import { assertCanUpdateBookReview } from '../../shared/utils/asserts/assertCanU
 import { ITransaction } from '../../shared/types/ITransaction';
 import { BOOK_REVIEW_REPOSITORY } from '../../shared/tokens';
 import { BookReviewRepository } from '../../repositories/bookReviewRepository';
+import { UpdatableBookReview } from '../../../../domain/bookReview/updatableBookReview';
+import {
+  ExtraBookReviewValidationProps
+} from '../../../../domain/bookReview/shared/types/extraBookReviewValidationProps';
 
 @Injectable()
 export class UpdateBookReviewService {
@@ -20,11 +24,21 @@ export class UpdateBookReviewService {
     dto: BookReviewFormDto,
     transaction: ITransaction,
   ): Promise<BookReviewOutputDto> {
-    const review = await this.readBookReview.getById(id, transaction);
-    const validation = await this.readBookReview.getExtraValidationProps(dto, transaction);
+    const [review, validation] = await this.getReviewAndExtraValidationParams(id, dto, transaction);
     assertCanUpdateBookReview(review.canUpdate(dto, validation));
     const newReview = review.update(dto, validation);
     await this.repository.update(newReview, transaction);
     return BookReviewOutputDto.from(newReview);
+  }
+
+  private async getReviewAndExtraValidationParams(
+    id: string,
+    dto: BookReviewFormDto,
+    transaction: ITransaction,
+  ): Promise<[UpdatableBookReview, ExtraBookReviewValidationProps]> {
+    return Promise.all([
+      this.readBookReview.getById(id, transaction),
+      this.readBookReview.getExtraValidationProps(dto, transaction),
+    ]);
   }
 }
