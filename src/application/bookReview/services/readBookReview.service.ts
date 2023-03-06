@@ -7,7 +7,7 @@ import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/form/bo
 import { BOOK_REVIEW_NOT_FOUND } from '../../../shared/errorMessages';
 import { ITransaction } from '../shared/types/ITransaction';
 import { ExtraBookReviewValidationProps } from '../../../domain/bookReview/shared/types/extraBookReviewValidationProps';
-import { UpdatableBookReview } from '../../../domain/bookReview/updatableBookReview';
+import { BookReview } from '../../../domain/bookReview/bookReview';
 
 @Injectable()
 export class ReadBookReviewService {
@@ -22,14 +22,14 @@ export class ReadBookReviewService {
     return AllBookReviewsOutputDto.from(reviews);
   }
 
-  public async getById(id: string, transaction: ITransaction): Promise<UpdatableBookReview> {
+  public async getById(id: string, transaction: ITransaction): Promise<BookReview> {
     const review = await this.repository.findById(id, transaction);
 
     if (!review) {
       throw new BadRequestException(BOOK_REVIEW_NOT_FOUND);
     }
 
-    return new UpdatableBookReview(review);
+    return review;
   }
 
   public async getExtraValidationProps(

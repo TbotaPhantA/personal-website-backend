@@ -25,8 +25,10 @@ export class UpdateBookReviewService {
     transaction: ITransaction,
   ): Promise<BookReviewOutputDto> {
     const [review, validation] = await this.getReviewAndExtraValidationParams(id, dto, transaction);
+
     assertCanUpdateBookReview(review.canUpdate(dto, validation));
     const newReview = review.update(dto, validation);
+
     await this.repository.update(newReview, transaction);
     return BookReviewOutputDto.from(newReview);
   }
@@ -37,8 +39,13 @@ export class UpdateBookReviewService {
     transaction: ITransaction,
   ): Promise<[UpdatableBookReview, ExtraBookReviewValidationProps]> {
     return Promise.all([
-      this.readBookReview.getById(id, transaction),
+      this.getUpdatableById(id, transaction),
       this.readBookReview.getExtraValidationProps(dto, transaction),
     ]);
+  }
+
+  private async getUpdatableById(id: string, transaction: ITransaction): Promise<UpdatableBookReview> {
+    const review = await this.readBookReview.getById(id, transaction);
+    return new UpdatableBookReview(review);
   }
 }
