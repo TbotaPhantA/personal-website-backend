@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { ulid } from 'ulid';
 import { CreateArticleTranslationParams } from './shared/types/createArticleTranslationParams';
 import { RawArticleTranslation } from './shared/types/RawArticleTranslation';
 
@@ -19,7 +19,7 @@ export class ArticleTranslation {
 
   public static createByDto(props: CreateArticleTranslationParams) {
     return new ArticleTranslation({
-      id: uuid(),
+      id: ulid(),
       articleId: props.articleId,
       languageId: props.languageId,
       title: props.title,

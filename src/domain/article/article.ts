@@ -1,7 +1,7 @@
-import { ArticleFormDto } from './shared/dto/form/articleFormData.dto';
-import { v4 as uuid } from 'uuid';
-import { ArticleTranslation } from './articleTranslation/articleTranslation';
 import { assert, compose, Invariant } from '@derbent-ninjas/invariant-composer';
+import { ulid } from 'ulid';
+import { ArticleFormDto } from './shared/dto/form/articleFormData.dto';
+import { ArticleTranslation } from './articleTranslation/articleTranslation';
 import { languagesMustNotBeRepeated } from './shared/utils/invariants/languagesMustNotBeRepeated';
 import { allLanguageIdsMustExist } from './shared/utils/invariants/allLanguageIdsMustExist';
 import { CreateArticleByDtoParams } from './shared/types/createArticleByDtoParams';
@@ -25,7 +25,7 @@ export class Article {
 
   public static createByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): Article {
     assert(Article.name, Article.canCreateByDto(dto, validation));
-    const articleId = uuid();
+    const articleId = ulid();
     return Article.createInstanceByDtoAndId(dto, articleId);
   }
 
