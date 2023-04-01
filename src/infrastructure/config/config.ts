@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 const throwRequired = (propName: string): never => {
   throw new Error(`Config property ${propName} is required`);
 };
@@ -13,6 +16,9 @@ class Config {
     user: process.env.POSTGRES_USER ?? throwRequired('POSTGRES_USER'),
     password: process.env.POSTGRES_PASSWORD ?? throwRequired('POSTGRES_PASSWORD'),
   };
+  auth = {
+    saltRounds: Number(process.env.SALT_ROUNDS) ?? throwRequired('SALT_ROUNDS'),
+  }
 
   private static instance: Config;
   // eslint-disable-next-line @typescript-eslint/no-empty-function

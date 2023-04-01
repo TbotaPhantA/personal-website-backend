@@ -9,6 +9,7 @@ declare global {
       POSTGRES_PORT: string;
       POSTGRES_USER: string;
       POSTGRES_PASSWORD: string;
+      SALT_ROUNDS: string;
     }
   }
 }
