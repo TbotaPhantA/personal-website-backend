@@ -15,7 +15,7 @@ export class BookReview {
     this.article = new Article(review.article);
   }
 
-  public static createByDto(
+  static createByDto(
     dto: BookReviewFormDto,
     validation: ExtraBookReviewValidationProps,
   ): BookReview {
@@ -27,7 +27,7 @@ export class BookReview {
     });
   }
 
-  public static canCreateByDto(
+  static canCreateByDto(
     ...[dto, validation]: CreateBookReviewByDtoParams
   ): Invariant {
     return path('article', Article.canCreateByDto(dto.article, validation));

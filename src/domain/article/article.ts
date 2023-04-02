@@ -23,13 +23,13 @@ export class Article {
     this.translations = article.translations;
   }
 
-  public static createByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): Article {
+  static createByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): Article {
     assert(Article.name, Article.canCreateByDto(dto, validation));
     const articleId = ulid();
     return Article.createInstanceByDtoAndId(dto, articleId);
   }
 
-  public static canCreateByDto(...params: CreateArticleByDtoParams): Invariant {
+  static canCreateByDto(...params: CreateArticleByDtoParams): Invariant {
     return Article.validateArticleForm(...params);
   }
 

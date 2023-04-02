@@ -12,7 +12,7 @@ export class UpdatableBookReview extends BookReview {
     this.article = new UpdatableArticle(review.article);
   }
 
-  public update(...[dto, validation]: CreateBookReviewByDtoParams): UpdatableBookReview {
+  update(...[dto, validation]: CreateBookReviewByDtoParams): UpdatableBookReview {
     assert(BookReview.name, this.canUpdate(dto, validation));
     const reviewId = this.id;
     return new UpdatableBookReview({
@@ -21,7 +21,7 @@ export class UpdatableBookReview extends BookReview {
     });
   }
 
-  public canUpdate(...[dto, validation]: CreateBookReviewByDtoParams): Invariant {
+  canUpdate(...[dto, validation]: CreateBookReviewByDtoParams): Invariant {
     return path('article', this.article.canUpdate(dto.article, validation))
   }
 }

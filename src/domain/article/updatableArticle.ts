@@ -8,13 +8,13 @@ export class UpdatableArticle extends Article {
     super(article);
   }
 
-  public update(...[dto, validation]: CreateArticleByDtoParams): UpdatableArticle {
+  update(...[dto, validation]: CreateArticleByDtoParams): UpdatableArticle {
     assert(Article.name, this.canUpdate(dto, validation));
     const articleId = this.id;
     return new UpdatableArticle(Article.createInstanceByDtoAndId(dto, articleId));
   }
 
-  public canUpdate(...params: CreateArticleByDtoParams): Invariant {
+  canUpdate(...params: CreateArticleByDtoParams): Invariant {
     return Article.validateArticleForm(...params);
   }
 }

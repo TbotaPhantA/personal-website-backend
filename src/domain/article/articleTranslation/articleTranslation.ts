@@ -17,7 +17,7 @@ export class ArticleTranslation {
     this.content = raw.content;
   }
 
-  public static createByDto(props: CreateArticleTranslationParams) {
+  static createByDto(props: CreateArticleTranslationParams) {
     return new ArticleTranslation({
       id: ulid(),
       articleId: props.articleId,

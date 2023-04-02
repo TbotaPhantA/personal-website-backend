@@ -18,7 +18,7 @@ export class User {
     Object.assign<User, WithoutMethods<User>>(this, userFields);
   }
 
-  public static createByDto(dto: UserFormDto, validation: ExtraUserValidationProps): User {
+  static createByDto(dto: UserFormDto, validation: ExtraUserValidationProps): User {
     assert(User.name, User.canCreateByDto(dto, validation));
     const userId = ulid();
     const salt = bcrypt.genSaltSync(config.auth.saltRounds)
@@ -31,7 +31,11 @@ export class User {
     })
   }
 
-  public static canCreateByDto(dto: UserFormDto, validation: ExtraUserValidationProps): Invariant {
+  static canCreateByDto(dto: UserFormDto, validation: ExtraUserValidationProps): Invariant {
     return usernameMustBeUnique(validation);
+  }
+
+  doesPasswordMatch(password: string): boolean {
+    return bcrypt.compareSync(password, this.passwordHash);
   }
 }

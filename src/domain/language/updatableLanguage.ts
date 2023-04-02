@@ -7,12 +7,12 @@ import { RawLanguage } from './shared/types/rawLanguage';
 export class UpdatableLanguage extends Language {
   constructor(language: RawLanguage) { super(language) }
 
-  public update(...[dto, validation]: CreateLanguageByDtoParams): UpdatableLanguage {
+  update(...[dto, validation]: CreateLanguageByDtoParams): UpdatableLanguage {
     assert(Language.name, this.canUpdate(dto, validation));
     return new UpdatableLanguage(Language.createInstanceFromDto(dto));
   }
 
-  public canUpdate(...[, validation]: CreateLanguageByDtoParams): Invariant {
+  canUpdate(...[, validation]: CreateLanguageByDtoParams): Invariant {
     return languageIdMustBeUnique(validation.isIdUnique);
   }
 }
