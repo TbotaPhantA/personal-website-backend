@@ -1,5 +1,4 @@
 import { assert, Invariant } from '@derbent-ninjas/invariant-composer';
-import { WithoutMethods } from '../../shared/types/withoutMethods';
 import { CreateUserFormDto } from './shared/dto/form/createUserForm.dto';
 import { ExtraUserValidationProps } from './shared/types/extraUserValidationProps';
 import { ulid } from 'ulid';
@@ -7,6 +6,7 @@ import { UserRoleEnum } from './shared/enums/userRole.enum';
 import * as bcrypt from 'bcryptjs';
 import config from '../../infrastructure/config/config';
 import { usernameMustBeUnique } from './shared/utils/isUsernameUnique';
+import { RawUser } from './shared/types/rawUser';
 
 export class User {
   readonly userId: string;
@@ -14,8 +14,8 @@ export class User {
   readonly role: UserRoleEnum;
   readonly passwordHash: string;
 
-  constructor(userFields: WithoutMethods<User>) {
-    Object.assign<User, WithoutMethods<User>>(this, userFields);
+  constructor(rawUser: RawUser) {
+    Object.assign<User, RawUser>(this, rawUser);
   }
 
   static createByDto(dto: CreateUserFormDto, validation: ExtraUserValidationProps): User {
