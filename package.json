@@ -31,6 +31,7 @@
     "@fastify/view": "^7.4.1",
     "@nestjs/common": "^9.0.11",
     "@nestjs/core": "^9.0.11",
+    "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "^9.0.11",
     "@nestjs/platform-fastify": "^9.0.11",
     "@nestjs/swagger": "^6.1.4",

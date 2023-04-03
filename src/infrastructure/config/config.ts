@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const throwRequired = (propName: string): never => {
+const throwRequired = (propName: keyof NodeJS.ProcessEnv): never => {
   throw new Error(`Config property ${propName} is required`);
 };
 
@@ -18,6 +18,8 @@ class Config {
   };
   auth = {
     saltRounds: Number(process.env.SALT_ROUNDS) ?? throwRequired('SALT_ROUNDS'),
+    jwtSecret: process.env.JWT_SECRET ?? throwRequired('JWT_SECRET'),
+    jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? throwRequired('JWT_EXPIRES_IN'),
   }
 
   private static instance: Config;

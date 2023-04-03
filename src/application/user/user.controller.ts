@@ -3,11 +3,16 @@ import { LoginUserFormDto } from '../../domain/user/shared/dto/form/loginUserFor
 import { LoginOutputDto } from '../../domain/user/shared/dto/output/loginOutputDto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
+import { UserService } from './user.service';
 
 @Controller('user')
 @UseFilters(AllExceptionFilter)
 @ApiTags('user')
 export class UserController {
+  constructor(
+    private readonly userService: UserService,
+  ) {}
+
   @Post('login')
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({
@@ -16,8 +21,6 @@ export class UserController {
     type: LoginOutputDto,
   })
   async login(@Body() dto: LoginUserFormDto): Promise<LoginOutputDto> {
-    return {
-      accessToken: 'token',
-    }
+    return this.userService.login(dto);
   }
 }

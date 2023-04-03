@@ -10,6 +10,8 @@ declare global {
       POSTGRES_USER: string;
       POSTGRES_PASSWORD: string;
       SALT_ROUNDS: string;
+      JWT_SECRET: string;
+      JWT_EXPIRES_IN: string;
     }
   }
 }
