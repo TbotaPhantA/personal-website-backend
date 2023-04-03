@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { UserRoleEnum } from '../enums/userRole.enum';
 
-export class UserFormDto {
+export class CreateUserFormDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(30)

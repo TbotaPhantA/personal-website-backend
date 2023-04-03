@@ -1,6 +1,6 @@
 import { assert, Invariant } from '@derbent-ninjas/invariant-composer';
 import { WithoutMethods } from '../../shared/types/withoutMethods';
-import { UserFormDto } from './shared/dto/userForm.dto';
+import { CreateUserFormDto } from './shared/dto/createUserForm.dto';
 import { ExtraUserValidationProps } from './shared/types/extraUserValidationProps';
 import { ulid } from 'ulid';
 import { UserRoleEnum } from './shared/enums/userRole.enum';
@@ -18,7 +18,7 @@ export class User {
     Object.assign<User, WithoutMethods<User>>(this, userFields);
   }
 
-  static createByDto(dto: UserFormDto, validation: ExtraUserValidationProps): User {
+  static createByDto(dto: CreateUserFormDto, validation: ExtraUserValidationProps): User {
     assert(User.name, User.canCreateByDto(dto, validation));
     const userId = ulid();
     const salt = bcrypt.genSaltSync(config.auth.saltRounds)
@@ -31,7 +31,7 @@ export class User {
     })
   }
 
-  static canCreateByDto(dto: UserFormDto, validation: ExtraUserValidationProps): Invariant {
+  static canCreateByDto(dto: CreateUserFormDto, validation: ExtraUserValidationProps): Invariant {
     return usernameMustBeUnique(validation);
   }
 
