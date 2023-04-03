@@ -1,6 +1,6 @@
 import { assert, Invariant } from '@derbent-ninjas/invariant-composer';
 import { WithoutMethods } from '../../shared/types/withoutMethods';
-import { CreateUserFormDto } from './shared/dto/createUserForm.dto';
+import { CreateUserFormDto } from './shared/dto/form/createUserForm.dto';
 import { ExtraUserValidationProps } from './shared/types/extraUserValidationProps';
 import { ulid } from 'ulid';
 import { UserRoleEnum } from './shared/enums/userRole.enum';

@@ -1,5 +1,5 @@
 import { InjectionBuilder } from 'ts-fixture-builder';
-import { CreateUserFormDto } from '../../../../src/domain/user/shared/dto/createUserForm.dto';
+import { CreateUserFormDto } from '../../../../src/domain/user/shared/dto/form/createUserForm.dto';
 import { UserRoleEnum } from '../../../../src/domain/user/shared/enums/userRole.enum';
 
 export class UserFormDtoBuilder {
