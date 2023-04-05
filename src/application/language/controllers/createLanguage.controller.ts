@@ -6,7 +6,7 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LanguageFormDto } from '../../../domain/language/shared/dto/form/languageForm.dto';
 import { LanguageOutputDto } from '../../../domain/language/shared/dto/output/languageOutput.dto';
 import { AllExceptionFilter } from '../../../shared/exceptionFilters/allErrors.filter';
@@ -18,6 +18,7 @@ import { UserRoleEnum } from '../../../domain/user/shared/enums/userRole.enum';
 @Controller('language')
 @UseFilters(AllExceptionFilter)
 @UseGuards(RolesGuard)
+@ApiBearerAuth()
 @ApiTags('language')
 export class CreateLanguageController {
   constructor(

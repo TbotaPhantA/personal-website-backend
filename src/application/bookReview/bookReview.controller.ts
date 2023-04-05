@@ -9,7 +9,7 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BookReviewOutputDto } from '../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
 import { BookReviewFormDto } from '../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { ReadBookReviewService } from './services/readBookReview.service';
@@ -24,6 +24,7 @@ import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
 @UseGuards(RolesGuard)
+@ApiBearerAuth()
 @ApiTags('book-review')
 export class BookReviewController {
   constructor(

@@ -1,7 +1,7 @@
 import { Body, Controller, HttpStatus, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { LoginUserFormDto } from '../../domain/user/shared/dto/form/loginUserForm.dto';
 import { LoginOutputDto } from '../../domain/user/shared/dto/output/loginOutputDto';
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
 import { UserService } from './user.service';
 import { RolesGuard } from '../../shared/guards/roles.guard';
@@ -11,6 +11,7 @@ import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
 @Controller('user')
 @UseFilters(AllExceptionFilter)
 @UseGuards(RolesGuard)
+@ApiBearerAuth()
 @ApiTags('user')
 export class UserController {
   constructor(
@@ -19,7 +20,6 @@ export class UserController {
 
   @Post('login')
   @Roles(UserRoleEnum.VISITOR, UserRoleEnum.ADMIN)
-  @ApiHeader({ name: 'authorization' })
   @ApiOperation({ summary: 'Login user' })
   @ApiResponse({
     status: HttpStatus.OK,

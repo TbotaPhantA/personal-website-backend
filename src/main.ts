@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const app = await createApp();
 
-  const config = new DocumentBuilder().setTitle('Portfolio').build();
+  const config = new DocumentBuilder().setTitle('Portfolio').addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
