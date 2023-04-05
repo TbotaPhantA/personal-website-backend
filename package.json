@@ -21,7 +21,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "prepare": "husky install",
     "docker-compose:up": "docker-compose up -d",
-    "docker-compose:down": "docker-compose down -d",
+    "docker-compose:down": "docker-compose down",
     "migrate:up": "knex migrate:up",
     "migrate:down": "knex migrate:down"
   },
