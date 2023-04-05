@@ -4,15 +4,20 @@ import {
   HttpStatus,
   Post,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LanguageFormDto } from '../../../domain/language/shared/dto/form/languageForm.dto';
 import { LanguageOutputDto } from '../../../domain/language/shared/dto/output/languageOutput.dto';
 import { AllExceptionFilter } from '../../../shared/exceptionFilters/allErrors.filter';
 import { CreateLanguageTransaction } from '../services/createLanguage/createLanguage.transaction';
+import { RolesGuard } from '../../../shared/guards/roles.guard';
+import { Roles } from '../../../shared/decorators/roles';
+import { UserRoleEnum } from '../../../domain/user/shared/enums/userRole.enum';
 
 @Controller('language')
 @UseFilters(AllExceptionFilter)
+@UseGuards(RolesGuard)
 @ApiTags('language')
 export class CreateLanguageController {
   constructor(
@@ -20,7 +25,9 @@ export class CreateLanguageController {
   ) { }
 
   @Post()
+  @Roles(UserRoleEnum.ADMIN)
   @ApiOperation({ summary: 'Create new language' })
+  @ApiHeader({ name: 'authorization' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'New language was successfully created',

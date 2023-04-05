@@ -7,8 +7,9 @@ import {
   Post,
   Put,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BookReviewOutputDto } from '../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
 import { BookReviewFormDto } from '../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { ReadBookReviewService } from './services/readBookReview.service';
@@ -16,9 +17,13 @@ import { AllBookReviewsOutputDto } from '../../domain/bookReview/shared/dto/outp
 import { AllExceptionFilter } from '../../shared/exceptionFilters/allErrors.filter';
 import { CreateBookReviewTransaction } from './services/createBookReview/createBookReview.transaction';
 import { UpdateBookReviewTransaction } from './services/updateBookReview/updateBookReview.transaction';
+import { RolesGuard } from '../../shared/guards/roles.guard';
+import { Roles } from '../../shared/decorators/roles';
+import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
 
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
+@UseGuards(RolesGuard)
 @ApiTags('book-review')
 export class BookReviewController {
   constructor(
@@ -28,6 +33,8 @@ export class BookReviewController {
   ) {}
 
   @Get('all')
+  @Roles(UserRoleEnum.VISITOR, UserRoleEnum.ADMIN)
+  @ApiHeader({ name: 'authorization' })
   @ApiOperation({ summary: 'get all book reviews' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -39,6 +46,8 @@ export class BookReviewController {
   }
 
   @Post()
+  @Roles(UserRoleEnum.ADMIN)
+  @ApiHeader({ name: 'authorization' })
   @ApiOperation({ summary: 'Create new book review' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -52,6 +61,8 @@ export class BookReviewController {
   }
 
   @Put(':bookReviewId')
+  @Roles(UserRoleEnum.ADMIN)
+  @ApiHeader({ name: 'authorization' })
   @ApiOperation({ summary: 'Update new book review' })
   @ApiResponse({
     status: HttpStatus.OK,

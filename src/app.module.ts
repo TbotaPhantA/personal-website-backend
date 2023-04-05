@@ -6,6 +6,7 @@ import { ConfigModule } from './infrastructure/config/config.module';
 import { UserModule } from './application/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import config from './infrastructure/config/config';
+import { RolesGuard } from './shared/guards/roles.guard';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import config from './infrastructure/config/config';
     })
   ],
   controllers: [],
-  providers: [],
+  providers: [RolesGuard],
 })
 export class AppModule {}
