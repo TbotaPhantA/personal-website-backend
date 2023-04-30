@@ -9,6 +9,8 @@ class Config {
   nodeEnv = process.env.NODE_ENV ?? throwRequired('NODE_ENV');
   host =  process.env.HOST ?? throwRequired('HOST');
   restPort =  process.env.REST_PORT ?? throwRequired('REST_PORT');
+  frontUrl = process.env.FRONT_URL ?? throwRequired('FRONT_URL')
+
   postgres = {
     db: process.env.POSTGRES_DB ?? throwRequired('POSTGRES_DB'),
     host: process.env.POSTGRES_HOST ?? throwRequired('POSTGRES_HOST'),

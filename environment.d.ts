@@ -4,6 +4,7 @@ declare global {
       NODE_ENV: 'development' | 'production';
       HOST: string;
       REST_PORT: string;
+      FRONT_URL: string;
       POSTGRES_DB: string;
       POSTGRES_HOST: string;
       POSTGRES_PORT: string;
