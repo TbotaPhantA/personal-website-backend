@@ -1,4 +1,4 @@
-import { InvariantException } from '../../application/bookReview/shared/utils/errors/invariantException';
+import { InvariantException } from '../errors/invariantException';
 import {
   ArgumentsHost,
   Catch,
@@ -7,12 +7,15 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { InvalidDtoException } from '../errors/invalidDtoException';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost): any {
     if (exception instanceof InvariantException) {
       AllExceptionFilter.catchInvariantException(exception, host);
+    } else if (exception instanceof InvalidDtoException) {
+      AllExceptionFilter.catchInvalidDtoException(exception, host);
     } else if (exception instanceof HttpException) {
       AllExceptionFilter.catchHttpException(exception, host);
     } else {
@@ -22,6 +25,24 @@ export class AllExceptionFilter implements ExceptionFilter {
 
   private static catchInvariantException(
     exception: InvariantException,
+    host: ArgumentsHost,
+  ) {
+    const ctx = host.switchToHttp();
+    const reply = ctx.getResponse<FastifyReply>();
+    const request = ctx.getRequest<FastifyRequest>();
+    const status = exception.getStatus();
+
+    reply.code(status).send({
+      statusCode: status,
+      message: exception.message,
+      timeStamp: new Date().toISOString(),
+      data: exception.data,
+      path: request.url,
+    });
+  }
+
+  private static catchInvalidDtoException(
+    exception: InvalidDtoException,
     host: ArgumentsHost,
   ) {
     const ctx = host.switchToHttp();

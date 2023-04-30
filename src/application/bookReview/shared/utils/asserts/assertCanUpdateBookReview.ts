@@ -5,7 +5,7 @@ import {
   path,
   Success,
 } from '@derbent-ninjas/invariant-composer';
-import { InvariantException } from '../errors/invariantException';
+import { InvariantException } from '../../../../../shared/errors/invariantException';
 import { HttpStatus } from '@nestjs/common';
 import { CANNOT_UPDATE_BOOK_REVIEW } from '../../../../../shared/errorMessages';
 

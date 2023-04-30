@@ -8,6 +8,9 @@ import {
 } from '@nestjs/platform-fastify';
 import * as util from 'util';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
+import { InvalidDtoException } from './shared/errors/invalidDtoException';
+import { INVALID_DTO } from './shared/errorMessages';
 
 async function bootstrap() {
   const port = process.env.REST_PORT;
@@ -17,6 +20,15 @@ async function bootstrap() {
   const config = new DocumentBuilder().setTitle('Portfolio').addBearerAuth().build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      exceptionFactory: (errors => new InvalidDtoException(INVALID_DTO, { errors }))
+    }),
+  );
 
   await app.listen(port, (err, address) => printStartResult(err, address));
 }

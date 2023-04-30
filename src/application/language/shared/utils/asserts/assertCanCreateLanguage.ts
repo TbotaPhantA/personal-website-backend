@@ -5,7 +5,7 @@ import {
   path,
   Success,
 } from '@derbent-ninjas/invariant-composer';
-import { InvariantException } from '../../../../bookReview/shared/utils/errors/invariantException';
+import { InvariantException } from '../../../../../shared/errors/invariantException';
 import { CANNOT_CREATE_LANGUAGE } from '../../../../../shared/errorMessages';
 import { HttpStatus } from '@nestjs/common';
 import { Language } from '../../../../../domain/language/language';
