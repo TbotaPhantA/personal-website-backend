@@ -14,6 +14,9 @@ import { CreateLanguageTransaction } from '../services/createLanguage/createLang
 import { RolesGuard } from '../../../shared/guards/roles.guard';
 import { Roles } from '../../../shared/decorators/roles';
 import { UserRoleEnum } from '../../../domain/user/shared/enums/userRole.enum';
+import * as E from 'fp-ts/Either';
+import { InvariantException } from '../../../shared/errors/invariantException';
+import { CANNOT_CREATE_LANGUAGE } from '../../../shared/errorMessages';
 
 @Controller('language')
 @UseFilters(AllExceptionFilter)
@@ -37,6 +40,16 @@ export class CreateLanguageController {
   async createLanguage(
     @Body() dto: LanguageFormDto,
   ): Promise<LanguageOutputDto> {
-    return this.createLanguageTransaction.run(dto);
+    const res = await this.createLanguageTransaction.run(dto);
+
+    if (E.isLeft(res)) {
+      throw new InvariantException(
+        CANNOT_CREATE_LANGUAGE,
+        HttpStatus.BAD_REQUEST,
+        res.left.map(e => ({ path: e.path, messages: e.messages })),
+      )
+    } else {
+      return res.right;
+    }
   }
 }

@@ -10,7 +10,7 @@ export class LoginUserFormDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(6)
+  @MinLength(5)
   @MaxLength(100)
   @ApiProperty({ example: 'password' })
   password: string;

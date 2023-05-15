@@ -5,6 +5,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LANGUAGE_REPOSITORY } from '../../shared/tokens';
 import { LanguageFactory } from '../../factories/language.factory';
 import { ITransaction } from '../../../bookReview/shared/types/ITransaction';
+import * as TE from 'fp-ts/TaskEither';
+import * as NEA from 'fp-ts/NonEmptyArray';
+import { pipe } from 'fp-ts/lib/function';
+import { ErrorMessagesWithPath } from '../../../../shared/fp-ts-helpers/types/errorMessagesWithPath';
 
 @Injectable()
 export class CreateLanguageService {
@@ -14,9 +18,14 @@ export class CreateLanguageService {
     private readonly languageFactory: LanguageFactory,
   ) {}
 
-  async createLanguage(dto: LanguageFormDto, transaction: ITransaction): Promise<LanguageOutputDto> {
-    const language = await this.languageFactory.create(dto, transaction);
-    await this.languageRepository.insert(language, transaction);
-    return LanguageOutputDto.from(language);
+  createLanguage(
+    dto: LanguageFormDto,
+    transaction: ITransaction
+  ): TE.TaskEither<NEA.NonEmptyArray<ErrorMessagesWithPath>, LanguageOutputDto> {
+    return pipe(
+      this.languageFactory.create(dto, transaction),
+      TE.chain(language => TE.fromTask(() => this.languageRepository.insert(language, transaction))),
+      TE.map(savedLanguage => LanguageOutputDto.from(savedLanguage)),
+    )
   }
 }

@@ -1,9 +1,14 @@
-import { Invariant, assert } from '@derbent-ninjas/invariant-composer';
 import { LanguageFormDto } from './shared/dto/form/languageForm.dto';
-import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUnique';
 import { ExtraLanguageValidationProps } from './shared/types/extraLanguageValidationProps';
-import { CreateLanguageByDtoParams } from './shared/types/createLanguageByDtoParams';
 import { RawLanguage } from './shared/types/rawLanguage';
+import * as A from 'fp-ts/Apply';
+import * as E from 'fp-ts/Either';
+import * as NEA from 'fp-ts/NonEmptyArray';
+import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUnique';
+import { pipe } from 'fp-ts/function';
+import { errorMessagesSemigroup } from '../../shared/fp-ts-helpers/errorMessagesSemigroup';
+import { ErrorMessagesWithPath } from '../../shared/fp-ts-helpers/types/errorMessagesWithPath';
+import { pathE } from '../../shared/fp-ts-helpers/utils/pathE';
 
 export class Language {
   readonly id: string;
@@ -14,19 +19,27 @@ export class Language {
     this.name = language.name;
   }
 
-  public static createByDto(dto: LanguageFormDto, validation: ExtraLanguageValidationProps): Language {
-    assert(Language.name, Language.canCreate(dto, validation));
-    return Language.createInstanceFromDto(dto);
+  public static createByDto(
+    dto: LanguageFormDto,
+    validation: ExtraLanguageValidationProps,
+  ): E.Either<NEA.NonEmptyArray<ErrorMessagesWithPath>, Language> {
+    return pipe(
+      A.sequenceT(E.getApplicativeValidation(errorMessagesSemigroup))(
+        pathE('id', languageIdMustBeUnique(validation.isIdUnique)),
+      ),
+      E.map(() => new Language(dto)),
+    );
   }
 
-  public static canCreate(...[, validation]: CreateLanguageByDtoParams): Invariant {
-    return languageIdMustBeUnique(validation.isIdUnique);
-  }
-
-  protected static createInstanceFromDto(dto: LanguageFormDto): Language {
-    return new Language({
-      id: dto.id,
-      name: dto.name,
-    });
+  public updateByDto(
+    dto: LanguageFormDto,
+    validation: ExtraLanguageValidationProps,
+  ): E.Either<NEA.NonEmptyArray<ErrorMessagesWithPath>, Language> {
+    return pipe(
+      A.sequenceT(E.getApplicativeValidation(errorMessagesSemigroup))(
+        pathE('id', languageIdMustBeUnique(validation.isIdUnique)),
+      ),
+      E.map(() => new Language({ ...this, ...dto })),
+    );
   }
 }
