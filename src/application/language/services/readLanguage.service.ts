@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { LANGUAGE_REPOSITORY } from '../shared/tokens';
 import { LanguageRepository } from '../repositories/language.repository';
-import { AllLanguagesOutputDto } from '../../../domain/language/shared/dto/output/allLanguagesOutput.dto';
 import { LanguageFormDto } from '../../../domain/language/shared/dto/form/languageForm.dto';
 import { ITransaction } from '../../bookReview/shared/types/ITransaction';
 import { ExtraLanguageValidationProps } from '../../../domain/language/shared/types/extraLanguageValidationProps';
+import { AllLanguagesOutputDto } from '../../../domain/language/shared/dto/output/allLanguagesOutput.dto';
+import { pipe } from 'fp-ts/lib/function';
+import * as T from 'fp-ts/Task';
 
 @Injectable()
 export class ReadLanguageService {
@@ -13,26 +15,34 @@ export class ReadLanguageService {
     private readonly languageRepository: LanguageRepository,
   ) {}
 
-  public async getAll(): Promise<AllLanguagesOutputDto> {
-    const languages = await this.languageRepository.findAll()();
-    return AllLanguagesOutputDto.from(languages);
+  getAll(): T.Task<AllLanguagesOutputDto> {
+    return pipe(
+      this.languageRepository.findAll(),
+      T.map(languages => AllLanguagesOutputDto.from(languages))
+    )
   }
 
-  public async doLanguagesExist(languageIds: string[], transaction: ITransaction): Promise<boolean> {
-    const foundLanguages = await this.languageRepository.findManyByIds(languageIds, transaction)
-    return foundLanguages.length === languageIds.length;
+  doLanguagesExist(languageIds: string[], transaction: ITransaction): T.Task<boolean> {
+    return pipe(
+      this.languageRepository.findManyByIds(languageIds, transaction),
+      T.map(foundLanguages => foundLanguages.length === languageIds.length)
+    )
   }
 
-  public async getExtraLanguageValidationProps(
+  getExtraLanguageValidationProps(
     dto: LanguageFormDto,
     transaction: ITransaction,
-  ): Promise<ExtraLanguageValidationProps> {
-    const isIdUnique = await this.isLanguageIdUnique(dto.id, transaction);
-    return { isIdUnique };
+  ): T.Task<ExtraLanguageValidationProps> {
+    return pipe(
+      this.isLanguageIdUnique(dto.id, transaction),
+      T.map(isIdUnique => ({ isIdUnique })),
+    )
   }
 
-  private async isLanguageIdUnique(languageId: string, transaction: ITransaction): Promise<boolean> {
-    const foundLanguage = await this.languageRepository.findById(languageId, transaction);
-    return !foundLanguage;
+  isLanguageIdUnique(languageId: string, transaction: ITransaction): T.Task<boolean> {
+    return pipe(
+      this.languageRepository.findById(languageId, transaction),
+      T.map(foundLanguage => !foundLanguage)
+    )
   }
 }

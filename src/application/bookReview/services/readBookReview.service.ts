@@ -45,7 +45,7 @@ export class ReadBookReviewService {
     const doLanguagesExist = await this.readLanguage.doLanguagesExist(
       languages,
       transaction,
-    );
+    )();
 
     return { doLanguagesExist };
   }

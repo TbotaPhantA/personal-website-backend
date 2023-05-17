@@ -15,7 +15,7 @@ export class LanguageFactory {
 
   create(dto: LanguageFormDto, transaction: ITransaction): TE.TaskEither<NEA.NonEmptyArray<ErrorMessagesWithPath>, Language> {
     return pipe(
-      TE.fromTask(() => this.readLanguage.getExtraLanguageValidationProps(dto, transaction)),
+      TE.fromTask(this.readLanguage.getExtraLanguageValidationProps(dto, transaction)),
       TE.chainEitherK((validation) => pathE('language', Language.createByDto(dto, validation)))
     )
   }

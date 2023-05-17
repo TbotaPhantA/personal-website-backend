@@ -27,6 +27,6 @@ export class ReadLanguageController {
     type: AllLanguagesOutputDto,
   })
   async getAllLanguages(): Promise<AllLanguagesOutputDto> {
-    return this.readService.getAll();
+    return this.readService.getAll()();
   }
 }
