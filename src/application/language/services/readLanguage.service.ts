@@ -14,7 +14,7 @@ export class ReadLanguageService {
   ) {}
 
   public async getAll(): Promise<AllLanguagesOutputDto> {
-    const languages = await this.languageRepository.findAll();
+    const languages = await this.languageRepository.findAll()();
     return AllLanguagesOutputDto.from(languages);
   }
 
