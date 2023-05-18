@@ -1,8 +1,11 @@
-import { ErrorMessagesWithPath } from '../types/errorMessagesWithPath';
+import { InvariantError } from '../errors/invariantError';
 
-export const addPath = (path: string, em: ErrorMessagesWithPath) => {
-  em.path = em.path === ''
-    ? path
-    : `${path}${em.path}`
-  return em;
+export const addPath = (path: string, invariantError: InvariantError) => {
+  invariantError.invariantErrors.forEach(e => {
+    e.path = e.path === ''
+      ? path
+      : `${path}${e.path}`
+  })
+
+  return invariantError;
 }

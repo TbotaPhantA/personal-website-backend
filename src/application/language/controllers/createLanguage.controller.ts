@@ -46,7 +46,7 @@ export class CreateLanguageController {
       throw new InvariantException(
         CANNOT_CREATE_LANGUAGE,
         HttpStatus.BAD_REQUEST,
-        res.left.map(e => ({ path: e.path, messages: e.messages })),
+        res.left.invariantErrors.map(e => ({ path: e.path, messages: e.messages })),
       )
     } else {
       return res.right;

@@ -1,7 +1,6 @@
 import * as NEA from 'fp-ts/NonEmptyArray';
 
-export interface ErrorMessagesWithPath {
-  _tag: 'ErrorMessagesWithPath';
+export interface InvariantErrorMessages {
   path: string;
   messages: NEA.NonEmptyArray<string>;
 }

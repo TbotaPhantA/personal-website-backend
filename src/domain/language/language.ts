@@ -3,12 +3,11 @@ import { ExtraLanguageValidationProps } from './shared/types/extraLanguageValida
 import { RawLanguage } from './shared/types/rawLanguage';
 import * as A from 'fp-ts/Apply';
 import * as E from 'fp-ts/Either';
-import * as NEA from 'fp-ts/NonEmptyArray';
 import { languageIdMustBeUnique } from './shared/invariants/languageIdMustBeUnique';
 import { pipe } from 'fp-ts/function';
 import { errorMessagesSemigroup } from '../../shared/fp-ts-helpers/errorMessagesSemigroup';
-import { ErrorMessagesWithPath } from '../../shared/fp-ts-helpers/types/errorMessagesWithPath';
 import { pathE } from '../../shared/fp-ts-helpers/utils/pathE';
+import { InvariantError } from '../../shared/fp-ts-helpers/errors/invariantError';
 
 export class Language {
   readonly id: string;
@@ -22,7 +21,7 @@ export class Language {
   public static createByDto(
     dto: LanguageFormDto,
     validation: ExtraLanguageValidationProps,
-  ): E.Either<NEA.NonEmptyArray<ErrorMessagesWithPath>, Language> {
+  ): E.Either<InvariantError, Language> {
     return pipe(
       A.sequenceT(E.getApplicativeValidation(errorMessagesSemigroup))(
         pathE('id', languageIdMustBeUnique(validation.isIdUnique)),
@@ -34,7 +33,7 @@ export class Language {
   public updateByDto(
     dto: LanguageFormDto,
     validation: ExtraLanguageValidationProps,
-  ): E.Either<NEA.NonEmptyArray<ErrorMessagesWithPath>, Language> {
+  ): E.Either<InvariantError, Language> {
     return pipe(
       A.sequenceT(E.getApplicativeValidation(errorMessagesSemigroup))(
         pathE('id', languageIdMustBeUnique(validation.isIdUnique)),

@@ -1,8 +1,7 @@
 import * as E from 'fp-ts/Either';
-import * as NEA from 'fp-ts/NonEmptyArray';
-import { ErrorMessagesWithPath } from '../types/errorMessagesWithPath';
+import { InvariantError } from '../errors/invariantError';
 
-type EMLeft = NEA.NonEmptyArray<ErrorMessagesWithPath>;
+type EMLeft = InvariantError;
 type EMRight = any;
 
 export function pathE<L extends EMLeft, R extends EMRight>(
@@ -10,7 +9,7 @@ export function pathE<L extends EMLeft, R extends EMRight>(
   either: E.Either<L, R>
 ): E.Either<L, R> {
   if (E.isLeft(either)) {
-    either.left.forEach(em => {
+    either.left.invariantErrors.forEach(em => {
       if (em.path === '') {
         em.path = path
       } else {

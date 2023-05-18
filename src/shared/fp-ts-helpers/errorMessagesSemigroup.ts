@@ -1,20 +1,22 @@
 import * as NEA from 'fp-ts/NonEmptyArray';
 import * as S from 'fp-ts/Semigroup';
 import _ from 'lodash';
-import { ErrorMessagesWithPath } from './types/errorMessagesWithPath';
+import { InvariantErrorMessages } from './types/invariantErrorMessages';
+import { InvariantError } from './errors/invariantError';
 
-export const errorMessagesSemigroup: S.Semigroup<NEA.NonEmptyArray<ErrorMessagesWithPath>> = {
+export const errorMessagesSemigroup: S.Semigroup<InvariantError> = {
   concat: (x, y) => {
-    const groupedErrorMessages = _.groupBy(NEA.concat(x)(y), em => em.path);
+    const groupedErrorMessages = _.groupBy(NEA.concat(x.invariantErrors)(y.invariantErrors), em => em.path);
 
-    return NEA.map((v: NEA.NonEmptyArray<ErrorMessagesWithPath>): ErrorMessagesWithPath => {
+    x.invariantErrors = NEA.map((v: NEA.NonEmptyArray<InvariantErrorMessages>) => {
       const [first, ...rest] = v
       const messages = rest.reduce((acc, em) => NEA.concat(acc)(em.messages), first.messages)
       return {
-        _tag: 'ErrorMessagesWithPath',
         path: first.path,
         messages,
       }
-    })(Object.values(groupedErrorMessages) as NEA.NonEmptyArray<NEA.NonEmptyArray<ErrorMessagesWithPath>>)
+    })(Object.values(groupedErrorMessages) as NEA.NonEmptyArray<NEA.NonEmptyArray<InvariantErrorMessages>>)
+
+    return x;
   }
 }

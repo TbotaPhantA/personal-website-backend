@@ -1,9 +1,8 @@
 import * as TE from 'fp-ts/TaskEither';
-import * as NEA from 'fp-ts/NonEmptyArray';
 import { pipe } from 'fp-ts/function';
-import { ErrorMessagesWithPath } from '../types/errorMessagesWithPath';
+import { InvariantError } from '../errors/invariantError';
 
-type EMLeft = NEA.NonEmptyArray<ErrorMessagesWithPath>;
+type EMLeft = InvariantError;
 type EMRight = any;
 
 export function pathTE<L extends EMLeft, R extends EMRight>(
@@ -13,7 +12,7 @@ export function pathTE<L extends EMLeft, R extends EMRight>(
   return pipe(
     taskEither,
     TE.mapLeft(l => {
-      l.forEach(em => {
+      l.invariantErrors.forEach(em => {
         if (em.path === '') {
           em.path = path
         } else {
