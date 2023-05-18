@@ -17,7 +17,7 @@ export class UserService {
   ) {}
 
   async login(dto: LoginUserFormDto): Promise<LoginOutputDto> {
-    const user = await this.userRepository.findOneByUsername(dto.username);
+    const user = await this.userRepository.findOneByUsername(dto.username)();
     assertUserExists(user);
     assertPasswordMatches(user, dto.password);
     return { accessToken: await this.generateAccessToken(user) }

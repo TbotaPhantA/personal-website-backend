@@ -5,7 +5,7 @@ import { UserRoleEnum } from '../../../../src/domain/user/shared/enums/userRole.
 export class UserFormDtoBuilder {
   public static get defaultAll(): InjectionBuilder<CreateUserFormDto> {
     return new InjectionBuilder<CreateUserFormDto>(new CreateUserFormDto()).with({
-      username: 'some name',
+      username: 'name',
       role: UserRoleEnum.ADMIN,
       password: 'some password',
     });
