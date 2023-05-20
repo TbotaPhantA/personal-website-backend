@@ -22,8 +22,8 @@ export class UserService {
   login(dto: LoginUserFormDto): TE.TaskEither<UnauthorizedException, LoginOutputDto> {
     return pipe(
       TE.fromTask(this.userRepository.findOneByUsername(dto.username)),
-      TE.chain(assertUserExists),
-      TE.chain(assertPasswordMatches(dto.password)),
+      TE.chainEitherK(assertUserExists),
+      TE.chainEitherK(assertPasswordMatches(dto.password)),
       TE.chainTaskK(this.generateAccessToken),
       TE.map(accessToken => ({ accessToken }))
     )

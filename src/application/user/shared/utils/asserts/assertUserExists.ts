@@ -1,10 +1,10 @@
 import { User } from '../../../../../domain/user/user';
 import { UnauthorizedException } from '@nestjs/common';
 import { INCORRECT_USERNAME_OR_PASSWORD } from '../../../../../shared/errorMessages';
-import * as TE from 'fp-ts/TaskEither';
+import * as E from 'fp-ts/Either';
 
-export function assertUserExists(user: User | undefined): TE.TaskEither<UnauthorizedException, User> {
+export function assertUserExists(user: User | undefined): E.Either<UnauthorizedException, User> {
   return user
-    ? TE.right(user)
-    : TE.left(new UnauthorizedException(INCORRECT_USERNAME_OR_PASSWORD))
+    ? E.right(user)
+    : E.left(new UnauthorizedException(INCORRECT_USERNAME_OR_PASSWORD))
 }
