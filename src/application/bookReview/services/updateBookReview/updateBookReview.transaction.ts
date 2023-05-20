@@ -6,7 +6,6 @@ import { UpdateBookReviewService } from './updateBookReview.service';
 import { InjectKnex } from '../../../../infrastructure/knex/shared/injectKnex';
 import { InvariantError } from '../../../../shared/fp-ts-helpers/errors/invariantError';
 import * as E from 'fp-ts/Either';
-import * as NEA from 'fp-ts/NonEmptyArray';
 
 @Injectable()
 export class UpdateBookReviewTransaction {
@@ -18,7 +17,7 @@ export class UpdateBookReviewTransaction {
   public async run(
     id: string,
     dto: BookReviewFormDto
-  ): Promise<E.Either<InvariantError | NEA.NonEmptyArray<BadRequestException>, BookReviewOutputDto>> {
+  ): Promise<E.Either<InvariantError | BadRequestException, BookReviewOutputDto>> {
     return this.knex.transaction(transaction => {
       return this.updateBookReviewService.updateBookReview(id, dto, transaction)();
     }, { isolationLevel: 'serializable' });

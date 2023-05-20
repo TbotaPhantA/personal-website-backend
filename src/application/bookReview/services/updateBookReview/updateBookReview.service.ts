@@ -28,7 +28,7 @@ export class UpdateBookReviewService {
     id: string,
     dto: BookReviewFormDto,
     transaction: ITransaction,
-  ): TE.TaskEither<InvariantError | NEA.NonEmptyArray<BadRequestException>, BookReviewOutputDto> {
+  ): TE.TaskEither<InvariantError | BadRequestException, BookReviewOutputDto> {
     return pipe(
       this.getReviewAndValidation(id, dto, transaction),
       TE.chainEitherKW(([review, validation]) => review.updateByDto(dto, validation)),
@@ -41,10 +41,13 @@ export class UpdateBookReviewService {
     id: string,
     dto: BookReviewFormDto,
     transaction: ITransaction,
-  ): TE.TaskEither<NEA.NonEmptyArray<BadRequestException>, [BookReview, ExtraBookReviewValidationProps]> {
-    return A.sequenceT(TE.getApplicativeTaskValidation(T.ApplyPar, NEA.getSemigroup<BadRequestException>()))(
-      this.readBookReview.getById(id, transaction),
-      TE.fromTask(this.readBookReview.getExtraValidationProps(dto, transaction)),
+  ): TE.TaskEither<BadRequestException, [BookReview, ExtraBookReviewValidationProps]> {
+    return pipe(
+      A.sequenceT(TE.getApplicativeTaskValidation(T.ApplyPar, NEA.getSemigroup<BadRequestException>()))(
+        this.readBookReview.getById(id, transaction),
+        TE.fromTask(this.readBookReview.getExtraValidationProps(dto, transaction)),
+      ),
+      TE.mapLeft(([e]) => e)
     )
   }
 }

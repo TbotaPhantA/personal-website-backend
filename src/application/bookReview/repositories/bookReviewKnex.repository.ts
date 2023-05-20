@@ -13,7 +13,7 @@ export class BookReviewKnexRepository implements BookReviewRepository {
   findById(id: string, transaction: Knex.Transaction): T.Task<BookReview | undefined> {
     return async () => {
       const rawBookReviews = await this.findAllQuery(transaction).where({ 'book_reviews.id': id });
-      return rawBookReviews?.[0];
+      return rawBookReviews?.[0] ? new BookReview(rawBookReviews[0]) : undefined;
     }
   }
 
