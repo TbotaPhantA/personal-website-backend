@@ -21,6 +21,7 @@ import { RolesGuard } from '../../shared/guards/roles.guard';
 import { Roles } from '../../shared/decorators/roles';
 import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
 import * as E from 'fp-ts/Either';
+import { pipe } from 'fp-ts/lib/function';
 
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
@@ -59,13 +60,10 @@ export class BookReviewController {
   async createBookReview(
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    const result = await this.createServiceTransaction.run(dto);
-
-    if (E.isLeft(result)) {
-      throw result.left;
-    } else {
-      return result.right;
-    }
+    return pipe(
+      await this.createServiceTransaction.run(dto),
+      E.getOrElseW(err => { throw err }),
+    )
   }
 
   @Put(':bookReviewId')
@@ -81,12 +79,9 @@ export class BookReviewController {
     @Param('bookReviewId') bookReviewId: string,
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    const result = await this.updateTransaction.run(bookReviewId, dto);
-
-    if (E.isLeft(result)) {
-      throw result.left;
-    } else {
-      return result.right;
-    }
+    return pipe(
+      await this.updateTransaction.run(bookReviewId, dto),
+      E.getOrElseW(err => { throw err })
+    )
   }
 }

@@ -15,6 +15,7 @@ import { RolesGuard } from '../../../shared/guards/roles.guard';
 import { Roles } from '../../../shared/decorators/roles';
 import { UserRoleEnum } from '../../../domain/user/shared/enums/userRole.enum';
 import * as E from 'fp-ts/Either';
+import { pipe } from 'fp-ts/lib/function';
 
 @Controller('language')
 @UseFilters(AllExceptionFilter)
@@ -38,12 +39,9 @@ export class CreateLanguageController {
   async createLanguage(
     @Body() dto: LanguageFormDto,
   ): Promise<LanguageOutputDto> {
-    const res = await this.createLanguageTransaction.run(dto);
-
-    if (E.isLeft(res)) {
-      throw res.left;
-    } else {
-      return res.right;
-    }
+    return pipe(
+      await this.createLanguageTransaction.run(dto),
+      E.getOrElseW(err => { throw err }),
+    )
   }
 }
