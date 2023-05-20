@@ -20,17 +20,21 @@ export class InMemoryBookReviewRepository implements BookReviewRepository {
     }
   }
 
-  public insert(bookReview: BookReview): T.Task<BookReview> {
-    return async () => {
-      this.bookReviewsMap.set(bookReview.id, bookReview);
-      return bookReview;
+  public insert(): (bookReview: BookReview) => T.Task<BookReview> {
+    return (bookReview: BookReview) => {
+      return async () => {
+        this.bookReviewsMap.set(bookReview.id, bookReview);
+        return bookReview;
+      }
     }
   }
 
-  public update(bookReview: BookReview): T.Task<BookReview> {
-    return async () => {
-      this.bookReviewsMap.set(bookReview.id, bookReview);
-      return bookReview;
+  public update(): (bookReview: BookReview) => T.Task<BookReview> {
+    return (bookReview: BookReview) => {
+      return async () => {
+        this.bookReviewsMap.set(bookReview.id, bookReview);
+        return bookReview;
+      }
     }
   }
 }
