@@ -7,6 +7,8 @@ import { UserService } from './user.service';
 import { RolesGuard } from '../../shared/guards/roles.guard';
 import { Roles } from '../../shared/decorators/roles';
 import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
+import { pipe } from 'fp-ts/lib/function';
+import * as TE from 'fp-ts/TaskEither';
 
 @Controller('user')
 @UseFilters(AllExceptionFilter)
@@ -27,6 +29,9 @@ export class UserController {
     type: LoginOutputDto,
   })
   async login(@Body() dto: LoginUserFormDto): Promise<LoginOutputDto> {
-    return this.userService.login(dto);
+    return pipe(
+      this.userService.login(dto),
+      TE.getOrElse(err => { throw err }),
+    )();
   }
 }
