@@ -23,7 +23,7 @@ export class CreateLanguageService {
   ): TE.TaskEither<InvariantError, LanguageOutputDto> {
     return pipe(
       this.languageFactory.create(dto, transaction),
-      TE.chain(language => TE.fromTask(this.languageRepository.insert(language, transaction))),
+      TE.chainTaskK(language => this.languageRepository.insert(language, transaction)),
       TE.map(language => LanguageOutputDto.from(language)),
     )
   }
