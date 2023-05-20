@@ -5,6 +5,9 @@ import { BOOK_REVIEW_REPOSITORY } from '../../shared/tokens';
 import { BookReviewRepository } from '../../repositories/bookReviewRepository';
 import { BookReviewFactory } from '../../factories/bookReview.factory';
 import { ITransaction } from '../../shared/types/ITransaction';
+import { InvariantError } from '../../../../shared/fp-ts-helpers/errors/invariantError';
+import { pipe } from 'fp-ts/lib/function';
+import * as TE from 'fp-ts/TaskEither';
 
 @Injectable()
 export class CreateBookReviewService {
@@ -14,12 +17,14 @@ export class CreateBookReviewService {
     private readonly bookReviewFactory: BookReviewFactory,
   ) {}
 
-  public async createBookReview(
+  public createBookReview(
     dto: BookReviewFormDto,
     transaction: ITransaction,
-  ): Promise<BookReviewOutputDto> {
-    const review = await this.bookReviewFactory.create(dto, transaction);
-    await this.repository.insert(review, transaction);
-    return BookReviewOutputDto.from(review);
+  ): TE.TaskEither<InvariantError, BookReviewOutputDto> {
+    return pipe(
+      this.bookReviewFactory.create(dto, transaction),
+      TE.chain(review => TE.fromTask(this.repository.insert(review, transaction))),
+      TE.map(review => BookReviewOutputDto.from(review)),
+    )
   }
 }

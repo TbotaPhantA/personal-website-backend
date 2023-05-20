@@ -2,27 +2,20 @@ import { Article } from '../../../../src/domain/article/article';
 // eslint-disable-next-line max-len
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
-import { fail, success } from '@derbent-ninjas/invariant-composer';
 import {
   LANGUAGES_DONT_EXIST,
   LANGUAGES_MUST_NOT_BE_REPEATED,
 } from '../../../../src/shared/errorMessages';
+import * as E from 'fp-ts/Either';
+import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
+import { ArticleTranslation } from '../../../../src/domain/article/articleTranslation/articleTranslation';
+
+jest.mock('ulid', () => ({
+  ulid: jest.fn(() => 'ulid'),
+}))
 
 describe('create Article', () => {
-  describe('constructor', () => {
-    test('when proper dto passed - should be defined', () => {
-      const dto = ArticleFormDtoBuilder.defaultWithTranslation.result;
-      const article = Article.createByDto(dto, { doLanguagesExist: true });
-      expect(article).toBeDefined();
-    });
-
-    test('when invalid dto passed - should throw', () => {
-      const dto = ArticleFormDtoBuilder.defaultWithTranslation.result;
-      expect(() => Article.createByDto(dto, { doLanguagesExist: false })).toThrow();
-    });
-  });
-
-  describe('canCreate', () => {
+  describe('createByDto', () => {
     describe('languages must not be repeated', () => {
       const testCases = [
         {
@@ -42,7 +35,21 @@ describe('create Article', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: success(),
+          expectedEither: E.right(new Article({
+            id: 'ulid',
+            originalLanguageId: 'en',
+            originalTitle: 'Domain-Driven Design',
+            originalContent: 'Aggregates are cool!',
+            translations: [
+              new ArticleTranslation({
+                id: 'ulid',
+                articleId: 'ulid',
+                languageId: 'ru',
+                title: 'Предметно-Ориентированое Проектирование',
+                content: 'Аггрераты крутые!',
+              })
+            ],
+          })),
         },
         {
           toString: () => '2',
@@ -61,13 +68,13 @@ describe('create Article', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
+          expectedEither: E.left(createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED)),
         },
       ];
 
-      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = Article.canCreateByDto(dto, validation);
-        expect(canCreate).toStrictEqual(expectedInvariant);
+      test.each(testCases)('%s', ({ dto, validation, expectedEither }) => {
+        const result = Article.createByDto(dto, validation);
+        expect(result).toStrictEqual(expectedEither);
       });
     });
 
@@ -90,14 +97,13 @@ describe('create Article', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedInvariant: fail({ message: LANGUAGES_DONT_EXIST }),
+          expectedEither: E.left(createInvariantError(LANGUAGES_DONT_EXIST)),
         },
       ];
 
-      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = Article.canCreateByDto(dto, validation);
-
-        expect(canCreate).toStrictEqual(expectedInvariant);
+      test.each(testCases)('%s', ({ dto, validation, expectedEither }) => {
+        const result = Article.createByDto(dto, validation);
+        expect(result).toStrictEqual(expectedEither);
       });
     });
   });

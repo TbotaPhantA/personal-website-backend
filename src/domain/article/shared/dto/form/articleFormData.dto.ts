@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { ALPHANUMERIC_REGEX } from '../../../../../shared/constants/noSpecialSymbolsRegEx';
 import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../../shared/errorMessages';
+import { Type } from 'class-transformer';
 
 export class ArticleFormDto {
   @IsNotEmpty()
@@ -36,6 +37,7 @@ export class ArticleFormDto {
   originalContent: string;
 
   @IsNotEmpty()
+  @Type(() => ArticleTranslationFormDto)
   @ValidateNested({ each: true })
   @ApiProperty({ type: [ArticleTranslationFormDto] })
   translations: ArticleTranslationFormDto[];

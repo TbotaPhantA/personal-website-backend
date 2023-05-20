@@ -1,12 +1,17 @@
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
 import { Article } from '../../../../src/domain/article/article';
-import { fail, success } from '@derbent-ninjas/invariant-composer';
 import {
   LANGUAGES_DONT_EXIST,
   LANGUAGES_MUST_NOT_BE_REPEATED,
 } from '../../../../src/shared/errorMessages';
-import { UpdatableArticle } from '../../../../src/domain/article/updatableArticle';
+import * as E from 'fp-ts/Either';
+import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
+import { ArticleTranslation } from '../../../../src/domain/article/articleTranslation/articleTranslation';
+
+jest.mock('ulid', () => ({
+  ulid: jest.fn(() => 'ulid'),
+}))
 
 const createValidArticle = () => {
   const dto = ArticleFormDtoBuilder.defaultWithTranslation.with({
@@ -22,68 +27,17 @@ const createValidArticle = () => {
     ],
   }).result;
 
-  return Article.createByDto(dto, { doLanguagesExist: true });
+  const result = Article.createByDto(dto, { doLanguagesExist: true });
+
+  if (E.isLeft(result)) {
+    throw new Error('failed article creation');
+  } else {
+    return result.right;
+  }
 };
 
 describe('update article', () => {
-  describe('update', () => {
-    test('valid params - should properly update values', () => {
-      const article = new UpdatableArticle(createValidArticle());
-
-      const newValues = {
-        originalLanguageId: 'en',
-        originalTitle: 'new Domain-Driven Design',
-        originalContent: 'new Aggregates are cool!',
-        translations: [
-          ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
-            languageId: 'es',
-            title: 'bla bla',
-            content: 'bla bla',
-          }).result,
-          ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
-            languageId: 'ru',
-            title: 'new Предметно-Ориентированое Проектирование',
-            content: 'new Аггрераты крутые!',
-          }).result,
-        ],
-      };
-
-      const updateDto =
-        ArticleFormDtoBuilder.defaultWithTranslation.with(newValues).result;
-
-      const updatedArticle = article.update(updateDto, { doLanguagesExist: true });
-
-      expect({
-        originalLanguageId: updatedArticle.originalLanguageId,
-        originalTitle: updatedArticle.originalTitle,
-        originalContent: updatedArticle.originalContent,
-        translations: [
-          ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
-            languageId: updatedArticle.translations[0].languageId,
-            title: updatedArticle.translations[0].title,
-            content: updatedArticle.translations[0].content,
-          }).result,
-          ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
-            languageId: updatedArticle.translations[1].languageId,
-            title: updatedArticle.translations[1].title,
-            content: updatedArticle.translations[1].content,
-          }).result,
-        ],
-      }).toStrictEqual(newValues);
-    });
-
-    test('invalid params - should throw', () => {
-      const article = new UpdatableArticle(createValidArticle());
-
-      expect(() => {
-        article.update(ArticleFormDtoBuilder.defaultWithTranslation.result, {
-          doLanguagesExist: false,
-        });
-      }).toThrow();
-    });
-  });
-
-  describe('canUpdate', () => {
+  describe('updateByDto', () => {
     describe('languages must not be repeated', () => {
       const testCases = [
         {
@@ -103,7 +57,21 @@ describe('update article', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: success(),
+          expectedEither: E.right(new Article({
+            id: 'ulid',
+            originalLanguageId: 'en',
+            originalTitle: 'Domain-Driven Design',
+            originalContent: 'Aggregates are cool!',
+            translations: [
+              new ArticleTranslation({
+                id: 'ulid',
+                articleId: 'ulid',
+                languageId: 'ru',
+                title: 'Предметно-Ориентированое Проектирование',
+                content: 'Аггрераты крутые!',
+              }),
+            ],
+          })),
         },
         {
           toString: () => '2',
@@ -122,17 +90,18 @@ describe('update article', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
+          expectedEither: E.left(createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED)),
         },
       ];
 
-      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const article = new UpdatableArticle(Article.createByDto(
-          ArticleFormDtoBuilder.defaultWithTranslation.result,
-          { doLanguagesExist: true },
-        ));
-        const canUpdate = article.canUpdate(dto, validation);
-        expect(canUpdate).toStrictEqual(expectedInvariant);
+      test.each(testCases)('%s', ({
+        dto,
+        validation,
+        expectedEither
+      }) => {
+        const article = createValidArticle();
+        const result = article.updateByDto(dto, validation);
+        expect(result).toStrictEqual(expectedEither);
       });
     });
 
@@ -155,17 +124,14 @@ describe('update article', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedInvariant: fail({ message: LANGUAGES_DONT_EXIST }),
+          expectedInvariant: E.left(createInvariantError(LANGUAGES_DONT_EXIST)),
         },
       ];
 
       test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const article = new UpdatableArticle(Article.createByDto(
-          ArticleFormDtoBuilder.defaultWithTranslation.result,
-          { doLanguagesExist: true },
-        ));
-        const canUpdate = article.canUpdate(dto, validation);
-        expect(canUpdate).toStrictEqual(expectedInvariant);
+        const article = createValidArticle();
+        const result = article.updateByDto(dto, validation);
+        expect(result).toStrictEqual(expectedInvariant);
       });
     });
   });

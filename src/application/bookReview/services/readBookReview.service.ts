@@ -8,6 +8,10 @@ import { BOOK_REVIEW_NOT_FOUND } from '../../../shared/errorMessages';
 import { ITransaction } from '../shared/types/ITransaction';
 import { ExtraBookReviewValidationProps } from '../../../domain/bookReview/shared/types/extraBookReviewValidationProps';
 import { BookReview } from '../../../domain/bookReview/bookReview';
+import { pipe } from 'fp-ts/lib/function';
+import * as T from 'fp-ts/Task';
+import * as E from 'fp-ts/Either';
+import * as TE from 'fp-ts/TaskEither';
 
 @Injectable()
 export class ReadBookReviewService {
@@ -17,36 +21,37 @@ export class ReadBookReviewService {
     private readonly readLanguage: ReadLanguageService,
   ) {}
 
-  public async getAll(): Promise<AllBookReviewsOutputDto> {
-    const reviews = await this.repository.getAll();
-    return AllBookReviewsOutputDto.from(reviews);
+  public getAll(): T.Task<AllBookReviewsOutputDto> {
+    return pipe(
+      this.repository.getAll(),
+      T.map(reviews => AllBookReviewsOutputDto.from(reviews))
+    )
   }
 
-  public async getById(id: string, transaction: ITransaction): Promise<BookReview> {
-    const review = await this.repository.findById(id, transaction);
-
-    if (!review) {
-      throw new BadRequestException(BOOK_REVIEW_NOT_FOUND);
-    }
-
-    return review;
+  public getById(id: string, transaction: ITransaction): TE.TaskEither<[BadRequestException], BookReview> {
+    return pipe(
+      this.repository.findById(id, transaction),
+      T.map(review => review ? E.right(review) : E.left([new BadRequestException(BOOK_REVIEW_NOT_FOUND)])),
+    )
   }
 
-  public async getExtraValidationProps(
+  public getExtraValidationProps(
     dto: BookReviewFormDto,
     transaction: ITransaction,
-  ): Promise<ExtraBookReviewValidationProps> {
-    const { originalLanguageId, translations } = dto.article;
-    const languages = [
-      originalLanguageId,
-      ...translations.map((t) => t.languageId),
-    ];
+  ): T.Task<ExtraBookReviewValidationProps> {
+    return async () => {
+      const { originalLanguageId, translations } = dto.article;
+      const languages = [
+        originalLanguageId,
+        ...translations.map((t) => t.languageId),
+      ];
 
-    const doLanguagesExist = await this.readLanguage.doLanguagesExist(
-      languages,
-      transaction,
-    )();
+      const doLanguagesExist = await this.readLanguage.doLanguagesExist(
+        languages,
+        transaction,
+      )();
 
-    return { doLanguagesExist };
+      return { doLanguagesExist };
+    }
   }
 }

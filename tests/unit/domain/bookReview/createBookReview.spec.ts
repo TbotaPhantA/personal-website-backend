@@ -3,44 +3,22 @@ import { BookReviewFormDtoBuilder } from '../../../__fixtures__/builders/bookRev
 import { BookReview } from '../../../../src/domain/bookReview/bookReview';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
-import { success, fail, path } from '@derbent-ninjas/invariant-composer';
 import {
   LANGUAGES_DONT_EXIST,
   LANGUAGES_MUST_NOT_BE_REPEATED,
 } from '../../../../src/shared/errorMessages';
+import * as E from 'fp-ts/Either';
+import { Article } from '../../../../src/domain/article/article';
+import { ArticleTranslation } from '../../../../src/domain/article/articleTranslation/articleTranslation';
+import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
+import { addPath } from '../../../../src/shared/fp-ts-helpers/utils/addPath';
+
+jest.mock('ulid', () => ({
+  ulid: jest.fn(() => 'ulid'),
+}))
 
 describe('Create BookReview', () => {
-  describe('constructor', () => {
-    test('when proper dto passed - should be defined', () => {
-      const dto = BookReviewFormDtoBuilder.defaultWithTranslation.result;
-      const validation = { doLanguagesExist: true };
-      const bookReview = BookReview.createByDto(dto, validation);
-      expect(bookReview).toBeDefined();
-    });
-
-    test('when incorrect dto - should throw an exception', () => {
-      const invalidData = BookReviewFormDtoBuilder.defaultWithTranslation.with({
-        article: ArticleFormDtoBuilder.defaultWithTranslation.with({
-          originalLanguageId: 'en',
-          originalTitle: 'Domain-Driven Design',
-          originalContent: 'Aggregates are cool!',
-          translations: [
-            ArticleTranslationFormDtoBuilder.defaultOnlyRequired.with({
-              languageId: 'en',
-              title: 'Domain-Driven Design',
-              content: 'Aggregates are cool!',
-            }).result,
-          ],
-        }).result,
-      }).result;
-
-      const validation = { doLanguagesExist: true };
-
-      expect(() => BookReview.createByDto(invalidData, validation)).toThrow();
-    });
-  });
-
-  describe('canCreate', () => {
+  describe('createByDto', () => {
     describe('languages must not be repeated', () => {
       const testCases = [
         {
@@ -62,7 +40,24 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: path('article', success()),
+          expectedEither: E.right(new BookReview({
+            id: 'ulid',
+            article: new Article({
+              id: 'ulid',
+              originalLanguageId: 'en',
+              originalTitle: 'Domain-Driven Design',
+              originalContent: 'Aggregates are cool!',
+              translations: [
+                new ArticleTranslation({
+                  id: 'ulid',
+                  articleId: 'ulid',
+                  languageId: 'ru',
+                  title: 'Предметно-Ориентированое Проектирование',
+                  content: 'Аггрераты крутые!',
+                })
+              ],
+            })
+          })),
         },
         {
           toString: () => '2',
@@ -83,16 +78,17 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedInvariant: path(
-            'article',
-            fail({ message: LANGUAGES_MUST_NOT_BE_REPEATED }),
-          ),
+          expectedEither: E.left(addPath('article', createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED))),
         },
       ];
 
-      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = BookReview.canCreateByDto(dto, validation);
-        expect(canCreate).toStrictEqual(expectedInvariant);
+      test.each(testCases)('%s', ({
+        dto,
+        validation,
+        expectedEither,
+      }) => {
+        const result = BookReview.createByDto(dto, validation);
+        expect(result).toStrictEqual(expectedEither);
       });
     });
 
@@ -117,17 +113,17 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedInvariant: path(
-            'article',
-            fail({ message: LANGUAGES_DONT_EXIST }),
-          ),
+          expectedEither: E.left(addPath('article', createInvariantError(LANGUAGES_DONT_EXIST))),
         },
       ];
 
-      test.each(testCases)('%s', ({ dto, validation, expectedInvariant }) => {
-        const canCreate = BookReview.canCreateByDto(dto, validation);
-
-        expect(canCreate).toStrictEqual(expectedInvariant);
+      test.each(testCases)('%s', ({
+        dto,
+        validation,
+        expectedEither
+      }) => {
+        const result = BookReview.createByDto(dto, validation);
+        expect(result).toStrictEqual(expectedEither);
       });
     });
   });

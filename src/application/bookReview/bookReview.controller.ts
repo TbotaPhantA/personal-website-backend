@@ -20,6 +20,7 @@ import { UpdateBookReviewTransaction } from './services/updateBookReview/updateB
 import { RolesGuard } from '../../shared/guards/roles.guard';
 import { Roles } from '../../shared/decorators/roles';
 import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
+import * as E from 'fp-ts/Either';
 
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
@@ -43,7 +44,7 @@ export class BookReviewController {
     type: AllBookReviewsOutputDto,
   })
   async getAllLanguages(): Promise<AllBookReviewsOutputDto> {
-    return this.readService.getAll();
+    return this.readService.getAll()();
   }
 
   @Post()
@@ -58,7 +59,13 @@ export class BookReviewController {
   async createBookReview(
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    return this.createServiceTransaction.run(dto);
+    const result = await this.createServiceTransaction.run(dto);
+
+    if (E.isLeft(result)) {
+      throw result.left;
+    } else {
+      return result.right;
+    }
   }
 
   @Put(':bookReviewId')
@@ -74,6 +81,12 @@ export class BookReviewController {
     @Param('bookReviewId') bookReviewId: string,
     @Body() dto: BookReviewFormDto,
   ): Promise<BookReviewOutputDto> {
-    return this.updateTransaction.run(bookReviewId, dto);
+    const result = await this.updateTransaction.run(bookReviewId, dto);
+
+    if (E.isLeft(result)) {
+      throw result.left;
+    } else {
+      return result.right;
+    }
   }
 }

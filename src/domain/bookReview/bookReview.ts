@@ -1,10 +1,14 @@
-import { assert, Invariant, path } from '@derbent-ninjas/invariant-composer';
 import { ulid } from 'ulid';
 import { BookReviewFormDto } from './shared/dto/form/bookReviewForm.dto';
 import { Article } from '../article/article';
 import { ExtraBookReviewValidationProps } from './shared/types/extraBookReviewValidationProps';
-import { CreateBookReviewByDtoParams } from './shared/types/createBookReviewByDtoParams';
 import { RawBookReview } from './shared/types/rawBookReview';
+import { pipe } from 'fp-ts/lib/function';
+import * as A from 'fp-ts/Apply';
+import * as E from 'fp-ts/Either';
+import { invariantErrorSemigroup } from '../../shared/fp-ts-helpers/invariantErrorSemigroup';
+import { pathE } from '../../shared/fp-ts-helpers/utils/pathE';
+import { InvariantError } from '../../shared/fp-ts-helpers/errors/invariantError';
 
 export class BookReview {
   readonly id: string;
@@ -18,18 +22,24 @@ export class BookReview {
   static createByDto(
     dto: BookReviewFormDto,
     validation: ExtraBookReviewValidationProps,
-  ): BookReview {
-    assert(BookReview.name, BookReview.canCreateByDto(dto, validation));
-    const reviewId = ulid();
-    return new BookReview({
-      id: reviewId,
-      article: Article.createByDto(dto.article, validation),
-    });
+  ): E.Either<InvariantError, BookReview> {
+    return pipe(
+      A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+        pathE('article', Article.createByDto(dto.article, validation)),
+      ),
+      E.map(([article]) => new BookReview({ id: ulid(), article })),
+    )
   }
 
-  static canCreateByDto(
-    ...[dto, validation]: CreateBookReviewByDtoParams
-  ): Invariant {
-    return path('article', Article.canCreateByDto(dto.article, validation));
+  updateByDto(
+    dto: BookReviewFormDto,
+    validation: ExtraBookReviewValidationProps,
+  ): E.Either<InvariantError, BookReview> {
+    return pipe(
+      A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+        pathE('article', this.article.updateByDto(dto.article, validation)),
+      ),
+      E.map(([article]) => new BookReview({ id: this.id, article })),
+    )
   }
 }

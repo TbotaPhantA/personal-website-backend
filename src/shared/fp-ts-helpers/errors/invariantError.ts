@@ -5,7 +5,7 @@ export class InvariantError extends Error {
   invariantErrors: NEA.NonEmptyArray<InvariantErrorMessages>;
 
   constructor(errorMessages: NEA.NonEmptyArray<InvariantErrorMessages>) {
-    super();
+    super(InvariantError.name);
     this.invariantErrors = errorMessages;
   }
 }

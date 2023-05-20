@@ -1,15 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { BookReviewOutputDto } from '../../../../domain/bookReview/shared/dto/output/bookReviewOutput.dto';
 import { BookReviewFormDto } from '../../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
 import { ReadBookReviewService } from '../readBookReview.service';
-import { assertCanUpdateBookReview } from '../../shared/utils/asserts/assertCanUpdateBookReview';
 import { ITransaction } from '../../shared/types/ITransaction';
 import { BOOK_REVIEW_REPOSITORY } from '../../shared/tokens';
 import { BookReviewRepository } from '../../repositories/bookReviewRepository';
-import { UpdatableBookReview } from '../../../../domain/bookReview/updatableBookReview';
 import {
-  ExtraBookReviewValidationProps
+  ExtraBookReviewValidationProps,
 } from '../../../../domain/bookReview/shared/types/extraBookReviewValidationProps';
+import { BookReview } from '../../../../domain/bookReview/bookReview';
+import { pipe } from 'fp-ts/lib/function';
+import * as T from 'fp-ts/Task';
+import * as TE from 'fp-ts/TaskEither';
+import * as A from 'fp-ts/Apply';
+import * as NEA from 'fp-ts/NonEmptyArray';
+import { InvariantError } from '../../../../shared/fp-ts-helpers/errors/invariantError';
 
 @Injectable()
 export class UpdateBookReviewService {
@@ -19,33 +24,27 @@ export class UpdateBookReviewService {
     private readonly repository: BookReviewRepository,
   ) {}
 
-  async updateBookReview(
+  updateBookReview(
     id: string,
     dto: BookReviewFormDto,
     transaction: ITransaction,
-  ): Promise<BookReviewOutputDto> {
-    const [review, validation] = await this.getReviewAndExtraValidationParams(id, dto, transaction);
-
-    assertCanUpdateBookReview(review.canUpdate(dto, validation));
-    const newReview = review.update(dto, validation);
-
-    await this.repository.update(newReview, transaction);
-    return BookReviewOutputDto.from(newReview);
+  ): TE.TaskEither<InvariantError | NEA.NonEmptyArray<BadRequestException>, BookReviewOutputDto> {
+    return pipe(
+      this.getReviewAndValidation(id, dto, transaction),
+      TE.chainEitherKW(([review, validation]) => review.updateByDto(dto, validation)),
+      TE.chain(review => TE.fromTask(this.repository.update(review, transaction))),
+      TE.map(review => BookReviewOutputDto.from(review))
+    )
   }
 
-  private async getReviewAndExtraValidationParams(
+  private getReviewAndValidation(
     id: string,
     dto: BookReviewFormDto,
     transaction: ITransaction,
-  ): Promise<[UpdatableBookReview, ExtraBookReviewValidationProps]> {
-    return Promise.all([
-      this.getUpdatableById(id, transaction),
-      this.readBookReview.getExtraValidationProps(dto, transaction),
-    ]);
-  }
-
-  private async getUpdatableById(id: string, transaction: ITransaction): Promise<UpdatableBookReview> {
-    const review = await this.readBookReview.getById(id, transaction);
-    return new UpdatableBookReview(review);
+  ): TE.TaskEither<NEA.NonEmptyArray<BadRequestException>, [BookReview, ExtraBookReviewValidationProps]> {
+    return A.sequenceT(TE.getApplicativeTaskValidation(T.ApplyPar, NEA.getSemigroup<BadRequestException>()))(
+      this.readBookReview.getById(id, transaction),
+      TE.fromTask(this.readBookReview.getExtraValidationProps(dto, transaction)),
+    )
   }
 }

@@ -1,12 +1,15 @@
-import { assert, compose, Invariant } from '@derbent-ninjas/invariant-composer';
 import { ulid } from 'ulid';
 import { ArticleFormDto } from './shared/dto/form/articleFormData.dto';
 import { ArticleTranslation } from './articleTranslation/articleTranslation';
 import { languagesMustNotBeRepeated } from './shared/utils/invariants/languagesMustNotBeRepeated';
 import { allLanguageIdsMustExist } from './shared/utils/invariants/allLanguageIdsMustExist';
-import { CreateArticleByDtoParams } from './shared/types/createArticleByDtoParams';
 import { ExtraArticleValidationProps } from './shared/types/extraArticleValidationProps';
 import { WithoutMethods } from '../../shared/types/withoutMethods';
+import * as E from 'fp-ts/Either';
+import { InvariantError } from '../../shared/fp-ts-helpers/errors/invariantError';
+import { pipe } from 'fp-ts/lib/function';
+import * as A from 'fp-ts/Apply';
+import { invariantErrorSemigroup } from '../../shared/fp-ts-helpers/invariantErrorSemigroup';
 
 export class Article {
   readonly id: string;
@@ -23,30 +26,32 @@ export class Article {
     this.translations = article.translations;
   }
 
-  static createByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): Article {
-    assert(Article.name, Article.canCreateByDto(dto, validation));
-    const articleId = ulid();
-    return Article.createInstanceByDtoAndId(dto, articleId);
+  static createByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): E.Either<InvariantError, Article> {
+    return pipe(
+      Article.validate(dto, validation),
+      E.map(() => Article.createInstance(dto, ulid()))
+    )
   }
 
-  static canCreateByDto(...params: CreateArticleByDtoParams): Invariant {
-    return Article.validateArticleForm(...params);
+  updateByDto(dto: ArticleFormDto, validation: ExtraArticleValidationProps): E.Either<InvariantError, Article> {
+    return pipe(
+      Article.validate(dto, validation),
+      E.map(() => Article.createInstance(dto, this.id))
+    )
   }
 
-  protected static validateArticleForm(...params: CreateArticleByDtoParams): Invariant {
-    const [props, validation] = params;
-
-    return compose(
-      languagesMustNotBeRepeated(props),
+  private static validate(dto: ArticleFormDto, validation: ExtraArticleValidationProps) {
+    return A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+      languagesMustNotBeRepeated(dto),
       allLanguageIdsMustExist(validation),
-    );
+    )
   }
 
-  protected static createInstanceByDtoAndId(dto: ArticleFormDto, articleId: string) {
+  private static createInstance(dto: ArticleFormDto, articleId: string) {
     return new Article({
       ...dto,
       id: articleId,
       translations: dto.translations.map(t => ArticleTranslation.createByDto({ ...t, articleId }))
-    });
+    })
   }
 }
