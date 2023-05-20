@@ -32,7 +32,7 @@ export class UpdateBookReviewService {
     return pipe(
       this.getReviewAndValidation(id, dto, transaction),
       TE.chainEitherKW(([review, validation]) => review.updateByDto(dto, validation)),
-      TE.chainTaskK(review => this.repository.update(review, transaction)),
+      TE.chainTaskK(this.repository.update(transaction)),
       TE.map(BookReviewOutputDto.from)
     )
   }

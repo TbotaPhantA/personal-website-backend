@@ -53,73 +53,77 @@ export class BookReviewKnexRepository implements BookReviewRepository {
       .groupByRaw('book_reviews.id, articles.id')
   }
 
-  insert(bookReview: BookReview, transaction: Knex.Transaction): T.Task<BookReview> {
-    return async () => {
-      return transaction
-        .with(
-          'inserted_article',
-          transaction.insert({
-            id: bookReview.article.id,
-            original_language_id: bookReview.article.originalLanguageId,
-            original_title: bookReview.article.originalTitle,
-            original_content: bookReview.article.originalContent,
-          }).into('articles'),
-        )
-        .with(
-          'inserted_article_translations',
-          transaction.insert(bookReview.article.translations.map(t => ({
-            id: t.id,
-            article_id: t.articleId,
-            language_id: t.languageId,
-            title: t.title,
-            content: t.content,
-          }))).into('article_translations'),
-        )
-        .insert({
-          id: bookReview.id,
-          article_id: bookReview.article.id,
-        })
-        .into('book_reviews');
+  insert(transaction: Knex.Transaction): (bookReview: BookReview) => T.Task<BookReview>{
+    return (bookReview: BookReview) => {
+      return async () => {
+        return transaction
+          .with(
+            'inserted_article',
+            transaction.insert({
+              id: bookReview.article.id,
+              original_language_id: bookReview.article.originalLanguageId,
+              original_title: bookReview.article.originalTitle,
+              original_content: bookReview.article.originalContent,
+            }).into('articles'),
+          )
+          .with(
+            'inserted_article_translations',
+            transaction.insert(bookReview.article.translations.map(t => ({
+              id: t.id,
+              article_id: t.articleId,
+              language_id: t.languageId,
+              title: t.title,
+              content: t.content,
+            }))).into('article_translations'),
+          )
+          .insert({
+            id: bookReview.id,
+            article_id: bookReview.article.id,
+          })
+          .into('book_reviews');
+      }
     }
   }
 
-  update(bookReview: BookReview, transaction: Knex.Transaction): T.Task<BookReview> {
-    return async () => {
-      return transaction
-        .with(
-          'updated_article',
-          transaction.update({
-            id: bookReview.article.id,
-            original_language_id: bookReview.article.originalLanguageId,
-            original_title: bookReview.article.originalTitle,
-            original_content: bookReview.article.originalContent,
+  update(transaction: Knex.Transaction): (bookReview: BookReview) => T.Task<BookReview> {
+    return (bookReview: BookReview) => {
+      return async () => {
+        return transaction
+          .with(
+            'updated_article',
+            transaction.update({
+              id: bookReview.article.id,
+              original_language_id: bookReview.article.originalLanguageId,
+              original_title: bookReview.article.originalTitle,
+              original_content: bookReview.article.originalContent,
+            })
+              .where({ id: bookReview.article.id })
+              .into('articles'),
+          )
+          .with(
+            'removed_article_translations',
+            transaction
+              .where({ article_id: bookReview.article.id })
+              .del()
+              .into('article_translations'),
+          )
+          .with(
+            'inserted_article_translations',
+            transaction.insert(bookReview.article.translations.map(t => ({
+              id: t.id,
+              article_id: t.articleId,
+              language_id: t.languageId,
+              title: t.title,
+              content: t.content,
+            }))).into('article_translations'),
+          )
+          .update({
+            id: bookReview.id,
+            article_id: bookReview.article.id,
           })
-            .where({ id: bookReview.article.id })
-            .into('articles'),
-        )
-        .with(
-          'removed_article_translations',
-          transaction
-            .where({ article_id: bookReview.article.id })
-            .del()
-            .into('article_translations'),
-        )
-        .with(
-          'inserted_article_translations',
-          transaction.insert(bookReview.article.translations.map(t => ({
-            id: t.id,
-            article_id: t.articleId,
-            language_id: t.languageId,
-            title: t.title,
-            content: t.content,
-          }))).into('article_translations'),
-        )
-        .update({
-          id: bookReview.id,
-          article_id: bookReview.article.id,
-        })
-        .where({ id: bookReview.id })
-        .into('book_reviews')
+          .where({ id: bookReview.id })
+          .into('book_reviews')
+      }
     }
   }
 }

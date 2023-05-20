@@ -23,7 +23,7 @@ export class CreateBookReviewService {
   ): TE.TaskEither<InvariantError, BookReviewOutputDto> {
     return pipe(
       this.bookReviewFactory.create(dto, transaction),
-      TE.chainTaskK(review => this.repository.insert(review, transaction)),
+      TE.chainTaskK(this.repository.insert(transaction)),
       TE.map(BookReviewOutputDto.from),
     )
   }
