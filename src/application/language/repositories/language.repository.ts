@@ -4,8 +4,8 @@ import * as T from 'fp-ts/Task';
 
 export interface LanguageRepository {
   findAll(): T.Task<Language[]>;
-  insert(language: Language, transaction: ITransaction): T.Task<Language>;
-  update(language: Language, transaction: ITransaction): T.Task<Language>;
+  insert(transaction: ITransaction): (language: Language) => T.Task<Language>;
+  update(transaction: ITransaction): (language: Language) => T.Task<Language>;
   findById(id: string, transaction: ITransaction): T.Task<Language | undefined>;
   findManyByIds(ids: string[], transaction: ITransaction): T.Task<Language[]>;
 }

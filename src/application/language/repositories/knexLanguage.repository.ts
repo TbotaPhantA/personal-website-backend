@@ -46,11 +46,15 @@ export class KnexLanguageRepository implements LanguageRepository {
     }
   }
 
-  insert(language: Language, transaction: Knex.Transaction): T.Task<Language> {
-    return async () => transaction.insert<RawLanguage>(language).into(LANGUAGES_TABLE_NAME);
+  insert(transaction: Knex.Transaction): (language: Language) => T.Task<Language> {
+    return (language: Language) => {
+      return async () => transaction.insert<RawLanguage>(language).into(LANGUAGES_TABLE_NAME);
+    }
   }
 
-  update(language: Language, transaction: Knex.Transaction): T.Task<Language> {
-    return async () => transaction.update(language).into(LANGUAGES_TABLE_NAME);
+  update(transaction: Knex.Transaction): (language: Language) => T.Task<Language> {
+    return (language: Language) => {
+      return async () => transaction.update(language).into(LANGUAGES_TABLE_NAME);
+    }
   }
 }

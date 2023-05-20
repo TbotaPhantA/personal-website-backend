@@ -11,17 +11,21 @@ export class InMemoryLanguageRepository implements LanguageRepository {
     return async () => Array.from(this.languagesMap.values());
   }
 
-  insert(language: Language): T.Task<Language> {
-    return async () => {
-      this.languagesMap.set(language.id, language);
-      return language;
+  insert(): (language: Language) => T.Task<Language> {
+    return (language: Language) => {
+      return async () => {
+        this.languagesMap.set(language.id, language);
+        return language;
+      }
     }
   }
 
-  update(language: Language): T.Task<Language> {
-    return async () => {
-      this.languagesMap.set(language.id, language);
-      return language;
+  update(): (language: Language) => T.Task<Language> {
+    return (language: Language) => {
+      return async () => {
+        this.languagesMap.set(language.id, language);
+        return language;
+      }
     }
   }
 
