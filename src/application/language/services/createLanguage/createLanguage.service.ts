@@ -24,7 +24,7 @@ export class CreateLanguageService {
     return pipe(
       this.languageFactory.create(dto, transaction),
       TE.chainTaskK(language => this.languageRepository.insert(language, transaction)),
-      TE.map(language => LanguageOutputDto.from(language)),
+      TE.map(LanguageOutputDto.from),
     )
   }
 }

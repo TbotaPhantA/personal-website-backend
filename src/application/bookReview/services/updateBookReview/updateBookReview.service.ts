@@ -33,7 +33,7 @@ export class UpdateBookReviewService {
       this.getReviewAndValidation(id, dto, transaction),
       TE.chainEitherKW(([review, validation]) => review.updateByDto(dto, validation)),
       TE.chainTaskK(review => this.repository.update(review, transaction)),
-      TE.map(review => BookReviewOutputDto.from(review))
+      TE.map(BookReviewOutputDto.from)
     )
   }
 

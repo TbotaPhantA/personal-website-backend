@@ -24,7 +24,7 @@ export class CreateBookReviewService {
     return pipe(
       this.bookReviewFactory.create(dto, transaction),
       TE.chain(review => TE.fromTask(this.repository.insert(review, transaction))),
-      TE.map(review => BookReviewOutputDto.from(review)),
+      TE.map(BookReviewOutputDto.from),
     )
   }
 }
