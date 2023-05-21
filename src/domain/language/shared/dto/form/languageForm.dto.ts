@@ -5,7 +5,7 @@ import {
   Length,
   Matches,
   MaxLength,
-} from 'class-validator';
+} from 'class-validator-multi-lang-lite';
 import { ALPHANUMERIC_REGEX } from '../../../../../shared/constants/noSpecialSymbolsRegEx';
 import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../../shared/errorMessages';
 
