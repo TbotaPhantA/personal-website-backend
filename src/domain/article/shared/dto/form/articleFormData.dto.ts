@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator-multi-lang-lite';
 import { ALPHANUMERIC_REGEX } from '../../../../../shared/constants/noSpecialSymbolsRegEx';
-import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../../shared/errors/errorMessages';
 import { Type } from 'class-transformer';
 
 export class ArticleFormDto {
@@ -17,7 +17,7 @@ export class ArticleFormDto {
   @IsString()
   @Length(2, 2)
   @Matches(ALPHANUMERIC_REGEX, {
-    message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
+    message: ERROR_CODES.MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'en' })
   originalLanguageId: string;
@@ -26,7 +26,7 @@ export class ArticleFormDto {
   @IsString()
   @MaxLength(20)
   @Matches(ALPHANUMERIC_REGEX, {
-    message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
+    message: ERROR_CODES.MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'Title' })
   originalTitle: string;

@@ -4,7 +4,7 @@ import { FastifyRequest } from 'fastify';
 import { validate } from 'class-validator-multi-lang-lite';
 import en from '../i18n/class-validator/class-validator-en.json';
 import ru from '../i18n/class-validator/class-validator-ru.json';
-import { INVALID_DTO } from '../errorMessages';
+import { INVALID_DTO } from '../errors/errorMessages';
 import { InvalidDtoException } from '../errors/invalidDtoException';
 
 type Plain<T> = Record<keyof T, unknown>;

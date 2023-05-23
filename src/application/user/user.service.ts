@@ -24,7 +24,7 @@ export class UserService {
       TE.fromTask(this.userRepository.findOneByUsername(dto.username)),
       TE.chainEitherK(assertUserExists),
       TE.chainEitherK(assertPasswordMatches(dto.password)),
-      TE.chainTaskK(this.generateAccessToken),
+      TE.chainTaskK(user => this.generateAccessToken(user)),
       TE.map(accessToken => ({ accessToken }))
     )
   }

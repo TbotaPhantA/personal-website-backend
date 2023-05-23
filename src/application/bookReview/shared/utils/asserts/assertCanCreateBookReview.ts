@@ -6,7 +6,7 @@ import {
   Success,
 } from '@derbent-ninjas/invariant-composer';
 import { InvariantException } from '../../../../../shared/errors/invariantException';
-import { CANNOT_CREATE_BOOK_REVIEW } from '../../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../../shared/errors/errorMessages';
 import { HttpStatus } from '@nestjs/common';
 
 export function assertCanCreateBookReview(
@@ -16,7 +16,7 @@ export function assertCanCreateBookReview(
 
   if (isFail(canCreate)) {
     throw new InvariantException(
-      CANNOT_CREATE_BOOK_REVIEW,
+      ERROR_CODES.CANNOT_CREATE_BOOK_REVIEW,
       HttpStatus.BAD_REQUEST,
       display(canCreate),
     );

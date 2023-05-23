@@ -1,6 +1,4 @@
-import en from '../../../../src/shared/i18n/class-validator/class-validator-en.json';
-import ru from '../../../../src/shared/i18n/class-validator/class-validator-ru.json';
-import { INVALID_DTO } from '../../../../src/shared/errorMessages';
+import { INVALID_DTO } from '../../../../src/shared/errors/errorMessages';
 import { TranslatableValidateDto } from '../../../../src/shared/utils/translatableValidateDto';
 import { LanguageFormDto } from '../../../../src/domain/language/shared/dto/form/languageForm.dto';
 import { LanguageFormDtoBuilder } from '../../../__fixtures__/builders/language/languageForm.dto.builder';

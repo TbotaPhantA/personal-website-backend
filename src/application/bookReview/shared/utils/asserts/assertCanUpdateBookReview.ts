@@ -7,7 +7,7 @@ import {
 } from '@derbent-ninjas/invariant-composer';
 import { InvariantException } from '../../../../../shared/errors/invariantException';
 import { HttpStatus } from '@nestjs/common';
-import { CANNOT_UPDATE_BOOK_REVIEW } from '../../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../../shared/errors/errorMessages';
 
 export function assertCanUpdateBookReview(
   canUpdate: Invariant,
@@ -16,7 +16,7 @@ export function assertCanUpdateBookReview(
 
   if (isFail(canUpdate)) {
     throw new InvariantException(
-      CANNOT_UPDATE_BOOK_REVIEW,
+      ERROR_CODES.CANNOT_UPDATE_BOOK_REVIEW,
       HttpStatus.BAD_REQUEST,
       display(canUpdate),
     );

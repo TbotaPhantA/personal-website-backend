@@ -1,8 +1,8 @@
 import { Invariant, success, fail } from '@derbent-ninjas/invariant-composer';
-import { LANGUAGE_ID_MUST_BE_UNIQUE } from '../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../shared/errors/errorMessages';
 
 export function languageIdMustBeUniqueInvariant(isLanguageIdUnique: boolean): Invariant {
   return isLanguageIdUnique
     ? success()
-    : fail({ message: LANGUAGE_ID_MUST_BE_UNIQUE });
+    : fail({ message: ERROR_CODES.LANGUAGE_ID_MUST_BE_UNIQUE });
 }

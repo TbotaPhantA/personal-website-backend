@@ -1,4 +1,4 @@
-import { LANGUAGES_DONT_EXIST } from '../../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../../shared/errors/errorMessages';
 import { ExtraBookReviewValidationProps } from '../../../../bookReview/shared/types/extraBookReviewValidationProps';
 import * as E from 'fp-ts/Either';
 import { InvariantError } from '../../../../../shared/fp-ts-helpers/errors/invariantError';
@@ -9,5 +9,5 @@ export function allLanguageIdsMustExist(
 ): E.Either<InvariantError, ExtraBookReviewValidationProps> {
   return validation.doLanguagesExist
     ? E.right(validation)
-    : E.left(createInvariantError(LANGUAGES_DONT_EXIST));
+    : E.left(createInvariantError(ERROR_CODES.LANGUAGES_DONT_EXIST));
 }

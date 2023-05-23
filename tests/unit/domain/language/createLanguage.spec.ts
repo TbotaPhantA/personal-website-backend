@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-len
 import { LanguageFormDtoBuilder } from '../../../__fixtures__/builders/language/languageForm.dto.builder';
 import { Language } from '../../../../src/domain/language/language';
-import { LANGUAGE_ID_MUST_BE_UNIQUE } from '../../../../src/shared/errorMessages';
+import { ERROR_CODES } from '../../../../src/shared/errors/errorMessages';
 import * as E from 'fp-ts/Either';
 import { addPath } from '../../../../src/shared/fp-ts-helpers/utils/addPath';
 import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
@@ -28,7 +28,7 @@ describe('Language', () => {
           name: 'English'
         }).result,
         validation: { isIdUnique: false },
-        expectedEither: E.left(addPath('id', createInvariantError(LANGUAGE_ID_MUST_BE_UNIQUE))),
+        expectedEither: E.left(addPath('id', createInvariantError(ERROR_CODES.LANGUAGE_ID_MUST_BE_UNIQUE))),
       },
     ];
 
@@ -63,7 +63,7 @@ describe('Language', () => {
           name: 'English'
         }).result,
         validation: { isIdUnique: false },
-        expectedEither: E.left(addPath('id', createInvariantError(LANGUAGE_ID_MUST_BE_UNIQUE))),
+        expectedEither: E.left(addPath('id', createInvariantError(ERROR_CODES.LANGUAGE_ID_MUST_BE_UNIQUE))),
       },
     ];
 

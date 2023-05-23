@@ -1,10 +1,7 @@
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
 import { Article } from '../../../../src/domain/article/article';
-import {
-  LANGUAGES_DONT_EXIST,
-  LANGUAGES_MUST_NOT_BE_REPEATED,
-} from '../../../../src/shared/errorMessages';
+import { ERROR_CODES } from '../../../../src/shared/errors/errorMessages';
 import * as E from 'fp-ts/Either';
 import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
 import { ArticleTranslation } from '../../../../src/domain/article/articleTranslation/articleTranslation';
@@ -90,7 +87,7 @@ describe('update article', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedEither: E.left(createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED)),
+          expectedEither: E.left(createInvariantError(ERROR_CODES.LANGUAGES_MUST_NOT_BE_REPEATED)),
         },
       ];
 
@@ -124,7 +121,7 @@ describe('update article', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedInvariant: E.left(createInvariantError(LANGUAGES_DONT_EXIST)),
+          expectedInvariant: E.left(createInvariantError(ERROR_CODES.LANGUAGES_DONT_EXIST)),
         },
       ];
 

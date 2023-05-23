@@ -1,4 +1,4 @@
-import { LANGUAGES_MUST_NOT_BE_REPEATED } from '../../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../../shared/errors/errorMessages';
 import { ArticleFormDto } from '../../dto/form/articleFormData.dto';
 import * as E from 'fp-ts/Either';
 import { InvariantError } from '../../../../../shared/fp-ts-helpers/errors/invariantError';
@@ -9,7 +9,7 @@ export function languagesMustNotBeRepeated(props: ArticleFormDto): E.Either<Inva
 
   return languagesArray.length === languagesSet.size
     ? E.right(props)
-    : E.left(createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED))
+    : E.left(createInvariantError(ERROR_CODES.LANGUAGES_MUST_NOT_BE_REPEATED))
 
   function arrayAndSet(props: ArticleFormDto): [Array<string>, Set<string>] {
     const languagesArray = [

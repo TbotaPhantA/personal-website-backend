@@ -1,9 +1,6 @@
 import { BookReview } from '../../../../src/domain/bookReview/bookReview';
 import { BookReviewFormDtoBuilder } from '../../../__fixtures__/builders/bookReview/bookReviewForm.dto.builder';
-import {
-  LANGUAGES_DONT_EXIST,
-  LANGUAGES_MUST_NOT_BE_REPEATED,
-} from '../../../../src/shared/errorMessages';
+import { ERROR_CODES } from '../../../../src/shared/errors/errorMessages';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
 import * as E from 'fp-ts/Either';
@@ -82,13 +79,13 @@ describe('Update BookReview', () => {
           }).result,
         }).result,
         validation: { doLanguagesExist: true },
-        expectedEither: E.left(addPath('article', createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED))),
+        expectedEither: E.left(addPath('article', createInvariantError(ERROR_CODES.LANGUAGES_MUST_NOT_BE_REPEATED))),
       },
       {
         toString: () => '3',
         dto: BookReviewFormDtoBuilder.defaultWithTranslation.result,
         validation: { doLanguagesExist: false },
-        expectedEither: E.left(addPath('article', createInvariantError(LANGUAGES_DONT_EXIST))),
+        expectedEither: E.left(addPath('article', createInvariantError(ERROR_CODES.LANGUAGES_DONT_EXIST))),
       },
     ];
 

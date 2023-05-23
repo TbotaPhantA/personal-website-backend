@@ -2,7 +2,7 @@ import { UserFormDtoBuilder } from '../../../__fixtures__/builders/user/userForm
 import { User } from '../../../../src/domain/user/user';
 import * as E from 'fp-ts/Either';
 import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
-import { USERNAME_MUST_BE_UNIQUE } from '../../../../src/shared/errorMessages';
+import { ERROR_CODES } from '../../../../src/shared/errors/errorMessages';
 import { UserRoleEnum } from '../../../../src/domain/user/shared/enums/userRole.enum';
 
 jest.mock('ulid', () => ({
@@ -21,7 +21,7 @@ describe('User', () => {
         toString: () => '1 username is not unique - should throw',
         dto: UserFormDtoBuilder.defaultAll.result,
         validation: { isUsernameUnique: false },
-        expectedEither: E.left(createInvariantError(USERNAME_MUST_BE_UNIQUE)),
+        expectedEither: E.left(createInvariantError(ERROR_CODES.USERNAME_ALREADY_EXISTS)),
       },
     ];
 

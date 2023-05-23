@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_ARE_NOT_ASSIGNED_FOR_ENDPOINT } from '../errorMessages';
+import { ROLES_ARE_NOT_ASSIGNED_FOR_ENDPOINT } from '../errors/errorMessages';
 import { JwtService } from '@nestjs/jwt';
 import { UserPayload } from '../types/userPayload';
 import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';

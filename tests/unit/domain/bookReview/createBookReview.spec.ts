@@ -3,10 +3,7 @@ import { BookReviewFormDtoBuilder } from '../../../__fixtures__/builders/bookRev
 import { BookReview } from '../../../../src/domain/bookReview/bookReview';
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
-import {
-  LANGUAGES_DONT_EXIST,
-  LANGUAGES_MUST_NOT_BE_REPEATED,
-} from '../../../../src/shared/errorMessages';
+import { ERROR_CODES } from '../../../../src/shared/errors/errorMessages';
 import * as E from 'fp-ts/Either';
 import { Article } from '../../../../src/domain/article/article';
 import { ArticleTranslation } from '../../../../src/domain/article/articleTranslation/articleTranslation';
@@ -78,7 +75,7 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedEither: E.left(addPath('article', createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED))),
+          expectedEither: E.left(addPath('article', createInvariantError(ERROR_CODES.LANGUAGES_MUST_NOT_BE_REPEATED))),
         },
       ];
 
@@ -113,7 +110,7 @@ describe('Create BookReview', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedEither: E.left(addPath('article', createInvariantError(LANGUAGES_DONT_EXIST))),
+          expectedEither: E.left(addPath('article', createInvariantError(ERROR_CODES.LANGUAGES_DONT_EXIST))),
         },
       ];
 

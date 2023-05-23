@@ -2,10 +2,7 @@ import { Article } from '../../../../src/domain/article/article';
 // eslint-disable-next-line max-len
 import { ArticleFormDtoBuilder } from '../../../__fixtures__/builders/article/articleForm.dto.builder';
 import { ArticleTranslationFormDtoBuilder } from '../../../__fixtures__/builders/article/articleTranslationForm.dto';
-import {
-  LANGUAGES_DONT_EXIST,
-  LANGUAGES_MUST_NOT_BE_REPEATED,
-} from '../../../../src/shared/errorMessages';
+import { ERROR_CODES } from '../../../../src/shared/errors/errorMessages';
 import * as E from 'fp-ts/Either';
 import { createInvariantError } from '../../../../src/shared/fp-ts-helpers/utils/createInvariantError';
 import { ArticleTranslation } from '../../../../src/domain/article/articleTranslation/articleTranslation';
@@ -68,7 +65,7 @@ describe('create Article', () => {
           validation: {
             doLanguagesExist: true,
           },
-          expectedEither: E.left(createInvariantError(LANGUAGES_MUST_NOT_BE_REPEATED)),
+          expectedEither: E.left(createInvariantError(ERROR_CODES.LANGUAGES_MUST_NOT_BE_REPEATED)),
         },
       ];
 
@@ -97,7 +94,7 @@ describe('create Article', () => {
           validation: {
             doLanguagesExist: false,
           },
-          expectedEither: E.left(createInvariantError(LANGUAGES_DONT_EXIST)),
+          expectedEither: E.left(createInvariantError(ERROR_CODES.LANGUAGES_DONT_EXIST)),
         },
       ];
 

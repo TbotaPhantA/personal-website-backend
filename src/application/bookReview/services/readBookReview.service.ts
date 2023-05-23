@@ -4,7 +4,7 @@ import { BOOK_REVIEW_REPOSITORY } from '../shared/tokens';
 import { BookReviewRepository } from '../repositories/bookReviewRepository';
 import { ReadLanguageService } from '../../language/services/readLanguage.service';
 import { BookReviewFormDto } from '../../../domain/bookReview/shared/dto/form/bookReviewForm.dto';
-import { BOOK_REVIEW_NOT_FOUND } from '../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../shared/errors/errorMessages';
 import { ITransaction } from '../shared/types/ITransaction';
 import { ExtraBookReviewValidationProps } from '../../../domain/bookReview/shared/types/extraBookReviewValidationProps';
 import { BookReview } from '../../../domain/bookReview/bookReview';
@@ -31,7 +31,7 @@ export class ReadBookReviewService {
   public getById(id: string, transaction: ITransaction): TE.TaskEither<[BadRequestException], BookReview> {
     return pipe(
       this.repository.findById(id, transaction),
-      T.map(review => review ? E.right(review) : E.left([new BadRequestException(BOOK_REVIEW_NOT_FOUND)])),
+      T.map(review => review ? E.right(review) : E.left([new BadRequestException(ERROR_CODES.BOOK_REVIEW_NOT_FOUND)])),
     )
   }
 

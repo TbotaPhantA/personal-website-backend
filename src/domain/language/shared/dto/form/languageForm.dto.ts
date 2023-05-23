@@ -7,14 +7,14 @@ import {
   MaxLength,
 } from 'class-validator-multi-lang-lite';
 import { ALPHANUMERIC_REGEX } from '../../../../../shared/constants/noSpecialSymbolsRegEx';
-import { MUST_NOT_CONTAIN_SPECIAL_CHARACTERS } from '../../../../../shared/errorMessages';
+import { ERROR_CODES } from '../../../../../shared/errors/errorMessages';
 
 export class LanguageFormDto {
   @IsNotEmpty()
   @IsString()
   @Length(2, 2)
   @Matches(ALPHANUMERIC_REGEX, {
-    message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
+    message: ERROR_CODES.MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'en' })
   id: string;
@@ -23,7 +23,7 @@ export class LanguageFormDto {
   @IsString()
   @MaxLength(20)
   @Matches(ALPHANUMERIC_REGEX, {
-    message: MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
+    message: ERROR_CODES.MUST_NOT_CONTAIN_SPECIAL_CHARACTERS,
   })
   @ApiProperty({ example: 'English' })
   name: string;
