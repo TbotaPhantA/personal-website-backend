@@ -3,6 +3,7 @@ import {
   Controller,
   HttpStatus,
   Post,
+  Req,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +17,8 @@ import { Roles } from '../../../shared/decorators/roles';
 import { UserRoleEnum } from '../../../domain/user/shared/enums/userRole.enum';
 import * as E from 'fp-ts/Either';
 import { pipe } from 'fp-ts/lib/function';
+import { TranslatableValidateDto } from '../../../shared/utils/translatableValidateDto';
+import { FastifyRequest } from 'fastify';
 
 @Controller('language')
 @UseFilters(AllExceptionFilter)
@@ -30,7 +33,7 @@ export class CreateLanguageController {
   @Post()
   @Roles(UserRoleEnum.ADMIN)
   @ApiOperation({ summary: 'Create new language' })
-  @ApiHeader({ name: 'authorization' })
+  @ApiHeader({ name: 'accept-language', required: true })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'New language was successfully created',
@@ -38,10 +41,13 @@ export class CreateLanguageController {
   })
   async createLanguage(
     @Body() dto: LanguageFormDto,
+    @Req() request: FastifyRequest,
   ): Promise<LanguageOutputDto> {
-    return pipe(
-      await this.createLanguageTransaction.run(dto),
-      E.getOrElseW(err => { throw err }),
-    )
+    return TranslatableValidateDto.run(async () => {
+      return pipe(
+        await this.createLanguageTransaction.run(dto),
+        E.getOrElseW(err => { throw err }),
+      )
+    }, LanguageFormDto, dto, request);
   }
 }

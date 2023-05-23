@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -22,6 +23,8 @@ import { Roles } from '../../shared/decorators/roles';
 import { UserRoleEnum } from '../../domain/user/shared/enums/userRole.enum';
 import * as E from 'fp-ts/Either';
 import { pipe } from 'fp-ts/lib/function';
+import { TranslatableValidateDto } from '../../shared/utils/translatableValidateDto';
+import { FastifyRequest } from 'fastify';
 
 @Controller('book-review')
 @UseFilters(AllExceptionFilter)
@@ -37,7 +40,7 @@ export class BookReviewController {
 
   @Get('all')
   @Roles(UserRoleEnum.VISITOR, UserRoleEnum.ADMIN)
-  @ApiHeader({ name: 'authorization' })
+  @ApiHeader({ name: 'accept-language', required: true })
   @ApiOperation({ summary: 'get all book reviews' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -50,7 +53,7 @@ export class BookReviewController {
 
   @Post()
   @Roles(UserRoleEnum.ADMIN)
-  @ApiHeader({ name: 'authorization' })
+  @ApiHeader({ name: 'accept-language', required: true })
   @ApiOperation({ summary: 'Create new book review' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -59,16 +62,19 @@ export class BookReviewController {
   })
   async createBookReview(
     @Body() dto: BookReviewFormDto,
+    @Req() request: FastifyRequest,
   ): Promise<BookReviewOutputDto> {
-    return pipe(
-      await this.createServiceTransaction.run(dto),
-      E.getOrElseW(err => { throw err }),
-    )
+    return TranslatableValidateDto.run(async () => {
+      return pipe(
+        await this.createServiceTransaction.run(dto),
+        E.getOrElseW(err => { throw err }),
+      )
+    }, BookReviewFormDto, dto, request);
   }
 
   @Put(':bookReviewId')
   @Roles(UserRoleEnum.ADMIN)
-  @ApiHeader({ name: 'authorization' })
+  @ApiHeader({ name: 'accept-language', required: true })
   @ApiOperation({ summary: 'Update new book review' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -78,10 +84,13 @@ export class BookReviewController {
   async updateBookReview(
     @Param('bookReviewId') bookReviewId: string,
     @Body() dto: BookReviewFormDto,
+    @Req() request: FastifyRequest,
   ): Promise<BookReviewOutputDto> {
-    return pipe(
-      await this.updateTransaction.run(bookReviewId, dto),
-      E.getOrElseW(err => { throw err })
-    )
+    return TranslatableValidateDto.run(async () => {
+      return pipe(
+        await this.updateTransaction.run(bookReviewId, dto),
+        E.getOrElseW(err => { throw err })
+      )
+    }, BookReviewFormDto, dto, request);
   }
 }

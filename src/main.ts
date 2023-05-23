@@ -8,9 +8,6 @@ import {
 } from '@nestjs/platform-fastify';
 import * as util from 'util';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpStatus, ValidationPipe } from '@nestjs/common';
-import { InvalidDtoException } from './shared/errors/invalidDtoException';
-import { INVALID_DTO } from './shared/errorMessages';
 import config from './infrastructure/config/config';
 
 async function bootstrap() {
@@ -22,14 +19,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerSettings);
   SwaggerModule.setup('swagger', app, document);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-      exceptionFactory: (errors => new InvalidDtoException(INVALID_DTO, { errors }))
-    }),
-  );
   app.enableCors({ origin: config.frontUrl, methods: ['GET', 'POST', 'PUT', 'DELETE'] });
 
   await app.listen(port, (err, address) => printStartResult(err, address));
