@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { LoginUserFormDto } from '../../domain/user/shared/dto/form/loginUserForm.dto';
 import { LoginOutputDto } from '../../domain/user/shared/dto/output/loginOutputDto';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -23,6 +23,7 @@ export class UserController {
   ) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @Roles(UserRoleEnum.VISITOR, UserRoleEnum.ADMIN)
   @ApiOperation({ summary: 'Login user' })
   @ApiHeader({ name: 'accept-language', required: true })
