@@ -7,6 +7,8 @@ import { UserModule } from './application/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import config from './infrastructure/config/config';
 import { RolesGuard } from './shared/guards/roles.guard';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpLoggingInterceptor } from './shared/interceptors/httpLogging.interceptor';
 
 @Module({
   imports: [
@@ -19,9 +21,15 @@ import { RolesGuard } from './shared/guards/roles.guard';
       global: true,
       secret: config.auth.jwtSecret,
       signOptions: { expiresIn: config.auth.jwtExpiresIn },
-    })
+    }),
   ],
   controllers: [],
-  providers: [RolesGuard],
+  providers: [
+    RolesGuard,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpLoggingInterceptor,
+    }
+  ],
 })
 export class AppModule {}
