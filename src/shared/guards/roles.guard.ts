@@ -39,9 +39,13 @@ export class RolesGuard implements CanActivate {
   }
 
   private isRoleFromHeaderAllowed(roles: Set<UserRoleEnum>, authHeader: string): boolean {
-    const accessToken = authHeader.split(' ')[1];
-    const payload = this.jwtService.verify(accessToken, { secret: config.auth.jwtSecret }) as UserPayload;
-    return roles.has(payload.role);
+    try {
+      const accessToken = authHeader.split(' ')[1];
+      const payload = this.jwtService.verify(accessToken, { secret: config.auth.jwtSecret }) as UserPayload;
+      return roles.has(payload.role);
+    } catch (e) {
+      return this.isVisitorAllowed(roles);
+    }
   }
 
   private isVisitorAllowed(roles: Set<UserRoleEnum>): boolean {
