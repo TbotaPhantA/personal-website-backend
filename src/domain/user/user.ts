@@ -8,10 +8,10 @@ import * as E from 'fp-ts/Either';
 import { InvariantError } from '../../shared/fp-ts-helpers/errors/invariantError';
 import { pipe } from 'fp-ts/lib/function';
 import * as A from 'fp-ts/Apply';
-import { invariantErrorSemigroup } from '../../shared/fp-ts-helpers/invariantErrorSemigroup';
 import { pathE } from '../../shared/fp-ts-helpers/utils/pathE';
 import { ulid } from 'ulid';
 import config from '../../infrastructure/config/config';
+import { eitherValidation } from '../../shared/fp-ts-helpers/validation';
 
 export class User {
   readonly userId: string;
@@ -25,7 +25,7 @@ export class User {
 
   static createByDto(dto: CreateUserFormDto, validation: ExtraUserValidationProps): E.Either<InvariantError, User> {
     return pipe(
-      A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+      A.sequenceT(eitherValidation)(
         pathE('username', usernameMustBeUnique(validation)),
       ),
       E.map(() => bcrypt.genSaltSync(config.auth.saltRounds)),

@@ -9,7 +9,7 @@ import * as E from 'fp-ts/Either';
 import { InvariantError } from '../../shared/fp-ts-helpers/errors/invariantError';
 import { pipe } from 'fp-ts/lib/function';
 import * as A from 'fp-ts/Apply';
-import { invariantErrorSemigroup } from '../../shared/fp-ts-helpers/invariantErrorSemigroup';
+import { eitherValidation } from '../../shared/fp-ts-helpers/validation';
 
 export class Article {
   readonly id: string;
@@ -41,7 +41,7 @@ export class Article {
   }
 
   private static validate(dto: ArticleFormDto, validation: ExtraArticleValidationProps) {
-    return A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+    return A.sequenceT(eitherValidation)(
       languagesMustNotBeRepeated(dto),
       allLanguageIdsMustExist(validation),
     )

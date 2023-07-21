@@ -6,9 +6,9 @@ import { RawBookReview } from './shared/types/rawBookReview';
 import { pipe } from 'fp-ts/lib/function';
 import * as A from 'fp-ts/Apply';
 import * as E from 'fp-ts/Either';
-import { invariantErrorSemigroup } from '../../shared/fp-ts-helpers/invariantErrorSemigroup';
 import { pathE } from '../../shared/fp-ts-helpers/utils/pathE';
 import { InvariantError } from '../../shared/fp-ts-helpers/errors/invariantError';
+import { eitherValidation } from '../../shared/fp-ts-helpers/validation';
 
 export class BookReview {
   readonly id: string;
@@ -24,7 +24,7 @@ export class BookReview {
     validation: ExtraBookReviewValidationProps,
   ): E.Either<InvariantError, BookReview> {
     return pipe(
-      A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+      A.sequenceT(eitherValidation)(
         pathE('article', Article.createByDto(dto.article, validation)),
       ),
       E.map(([article]) => new BookReview({ id: ulid(), article })),
@@ -36,7 +36,7 @@ export class BookReview {
     validation: ExtraBookReviewValidationProps,
   ): E.Either<InvariantError, BookReview> {
     return pipe(
-      A.sequenceT(E.getApplicativeValidation(invariantErrorSemigroup))(
+      A.sequenceT(eitherValidation)(
         pathE('article', this.article.updateByDto(dto.article, validation)),
       ),
       E.map(([article]) => new BookReview({ id: this.id, article })),
